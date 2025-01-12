@@ -1,36 +1,21 @@
-package com.web.hevepratas.entities;
+package com.web.hevepratas.dtos;
 
-import jakarta.persistence.*;
+import com.web.hevepratas.entities.ShoppingCart;
 
+public class UserDTO {
 
-@Entity
-@Table(name = "user")
-public class User {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false, name = "user_id")
     private Long id;
-    @Column(name = "user_name")
     private String userName;
-    @Column(name = "user_email")
     private String email;
-    @Column(name = "user_password")
     private String password;
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "shoppingCart_id")
-    private ShoppingCart shoppingCart;
-    @Column(name = "user_city")
+
+//    I believe here will be used a DTO, not a entity.
+
     private String city;
-    @Column(name = "user_address")
     private String userAddress;
-    @Column(name = "user_cep")
     private String cep;
-    @Column(name = "user_address_complement")
     private String complement;
-    @Column(name = "user_house_number")
     private int houseNumber;
-    @Column(name = "user_neighborhood")
     private String neighborhood;
 
 
@@ -65,14 +50,6 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public ShoppingCart getShoppingCart() {
-        return shoppingCart;
-    }
-
-    public void setShoppingCart(ShoppingCart shoppingCart) {
-        this.shoppingCart = shoppingCart;
     }
 
     public String getCity() {

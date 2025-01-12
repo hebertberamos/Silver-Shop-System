@@ -20,6 +20,46 @@ public class ShoppingCart {
     private List<CartItem> items;
 
     private Integer itemsQuantity;
-    private Double cartValue;
+    private Double cartAmount;
 
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public List<CartItem> getItems() {
+        return items;
+    }
+
+    public void setItems(List<CartItem> items) {
+        this.items = items;
+    }
+
+    public Integer getItemsQuantity() {
+        return itemsQuantity;
+    }
+
+    public void setItemsQuantity(Integer itemsQuantity) {
+        this.itemsQuantity = itemsQuantity;
+    }
+
+    public Double getCartAmount() {
+        return cartAmount;
+    }
+
+    public void setCartAmount(Double cartAmount) {
+        this.cartAmount = cartAmount;
+    }
 }
