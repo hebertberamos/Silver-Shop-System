@@ -1,16 +1,15 @@
 package com.web.hevepratas.dtos;
 
-import com.web.hevepratas.entities.CartItem;
-import com.web.hevepratas.entities.User;
 import java.util.List;
 
 public class ShoppingCartDTO {
 
     private Integer id;
-//    private User user;
-//    private List<CartItem> items;
+    private Long userId;
+    private List<CartItemDTO> items;
     private Integer itemsQuantity;
     private Double cartAmount;
+
 
     public Integer getId() {
         return id;
@@ -18,6 +17,18 @@ public class ShoppingCartDTO {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public List<CartItemDTO> getItems() {
+        return items;
     }
 
     public Integer getItemsQuantity() {

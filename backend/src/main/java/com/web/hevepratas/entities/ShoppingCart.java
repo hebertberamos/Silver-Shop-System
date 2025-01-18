@@ -2,6 +2,7 @@ package com.web.hevepratas.entities;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -11,7 +12,7 @@ public class ShoppingCart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false, name = "shopping_cart_id")
-    private Integer id;
+    private Long id;
 
     @OneToOne(mappedBy = "shoppingCart")
     private User user;
@@ -22,12 +23,20 @@ public class ShoppingCart {
     private Integer itemsQuantity;
     private Double cartAmount;
 
+    public ShoppingCart(){}
 
-    public Integer getId() {
+    public ShoppingCart(User user){
+        this.user = user;
+        this.items = new ArrayList<>();
+        this.itemsQuantity = 0;
+        this.cartAmount = 0.0;
+    }
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -41,10 +50,6 @@ public class ShoppingCart {
 
     public List<CartItem> getItems() {
         return items;
-    }
-
-    public void setItems(List<CartItem> items) {
-        this.items = items;
     }
 
     public Integer getItemsQuantity() {

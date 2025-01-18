@@ -2,16 +2,7 @@ package com.web.hevepratas.entities.enums;
 
 public enum Gender {
 
-    FEMALE("female"),
-    MALE("male");
+    FEMALE,
+    MALE;
 
-    private String gender;
-
-    Gender(String gender) {
-        this.gender = gender;
-    }
-
-    public String getGender() {
-        return gender;
-    }
 }

@@ -1,16 +1,12 @@
 package com.web.hevepratas.dtos;
 
-import com.web.hevepratas.entities.ShoppingCart;
-
 public class UserDTO {
 
     private Long id;
     private String userName;
     private String email;
     private String password;
-
-//    I believe here will be used a DTO, not a entity.
-
+    private Long shoppingCartId;
     private String city;
     private String userAddress;
     private String cep;
@@ -50,6 +46,14 @@ public class UserDTO {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Long getShoppingCartId() {
+        return shoppingCartId;
+    }
+
+    public void setShoppingCartId(Long shoppingCartId) {
+        this.shoppingCartId = shoppingCartId;
     }
 
     public String getCity() {

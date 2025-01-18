@@ -11,7 +11,7 @@ public class UserMapper {
         User entity = new User();
         entity.setUserName(dto.getUserName());
         entity.setEmail(dto.getEmail());
-        entity.setPassword(dto.getEmail());
+        entity.setPassword(dto.getPassword());
 //        shopping cart
         entity.setCity(dto.getCity());
         entity.setUserAddress(dto.getUserAddress());
@@ -28,7 +28,7 @@ public class UserMapper {
         dto.setId(entity.getId());
         dto.setUserName(entity.getUserName());
         dto.setEmail(entity.getEmail());
-        dto.setPassword(entity.getEmail());
+        dto.setPassword(entity.getPassword());
 //        shopping cart
         dto.setCity(entity.getCity());
         dto.setUserAddress(entity.getUserAddress());

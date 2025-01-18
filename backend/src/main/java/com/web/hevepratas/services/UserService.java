@@ -1,6 +1,7 @@
 package com.web.hevepratas.services;
 
 import com.web.hevepratas.dtos.UserDTO;
+import com.web.hevepratas.entities.ShoppingCart;
 import com.web.hevepratas.entities.User;
 import com.web.hevepratas.mappers.UserMapper;
 import com.web.hevepratas.repositories.UserRepository;
@@ -17,6 +18,8 @@ public class UserService {
     private UserRepository repository;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private ShoppingCartService shoppingCartService;
 
     public ResponseEntity<Page<UserDTO>> findAll(Pageable pageable){
         Page<User> page = repository.findAllUsers(pageable);
@@ -28,12 +31,15 @@ public class UserService {
         User entity = userMapper.fromUserDtoToEntity(dto);
 
         try{
-            repository.save(entity);
-            return "New user saved";
+            ShoppingCart shoppingCart = new ShoppingCart(entity);
+            entity.setShoppingCart(shoppingCart);
 
+            repository.save(entity);
+
+            return "New user saved";
         }
         catch(Exception e){
-            return "Error to save user.";
+            return "Error to save user. \n" + e;
         }
     }
 

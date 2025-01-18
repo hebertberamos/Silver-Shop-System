@@ -1,41 +1,22 @@
-package com.web.hevepratas.entities;
+package com.web.hevepratas.dtos;
 
 import com.web.hevepratas.entities.enums.Gender;
 import com.web.hevepratas.entities.enums.ProductSubType;
 import com.web.hevepratas.entities.enums.ProductType;
-import jakarta.persistence.*;
-
 import java.util.List;
 
-@Entity
-@Table(name = "product")
-public class Product {
+public class ProductDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false, name = "product_id")
     private Long id;
-    @Column(name = "product_name")
     private String name;
-    @Column(name = "product_price")
     private Double price;
-    @Column(name = "product_gender")
-    @Enumerated(EnumType.STRING)
     private Gender gender;
-    @Column(name = "product_type")
-    @Enumerated(EnumType.STRING)
     private ProductType type;
-    @Column(name = "product_subtype")
-    @Enumerated(EnumType.STRING)
     private ProductSubType subType;
-    @Column(name = "product_description")
     private String description;
-    @Column(name = "product_size")
     private Double size;
-    @Column(name = "product_quantity")
     private Integer quantityAvailable;
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-    private List<CartItem> cartItems;
+    private List<CartItemDTO> cartItems;
 
 
 
@@ -111,7 +92,7 @@ public class Product {
         this.quantityAvailable = quantityAvailable;
     }
 
-    public List<CartItem> getCartItems() {
+    public List<CartItemDTO> getCartItems() {
         return cartItems;
     }
 }
