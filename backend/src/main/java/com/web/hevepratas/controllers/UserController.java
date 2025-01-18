@@ -1,5 +1,6 @@
 package com.web.hevepratas.controllers;
 
+import com.web.hevepratas.dtos.AddressDTO;
 import com.web.hevepratas.dtos.UserDTO;
 import com.web.hevepratas.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,12 @@ public class UserController {
     @DeleteMapping(value = "/delete/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable Long id){
         return service.deleteUser(id);
+    }
+
+    //This guy will be implemented using the jwt to get the user, so the {userId} will not be passed because the application will know the user by the token.
+    @PostMapping(value = "/{userId}/new/address")
+    public ResponseEntity<String> addNewAddress(@PathVariable Long userId, @RequestBody AddressDTO dto) throws Exception {
+        return service.addNewAddress(userId, dto);
     }
 
 }

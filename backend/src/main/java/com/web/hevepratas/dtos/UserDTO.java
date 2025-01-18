@@ -7,12 +7,7 @@ public class UserDTO {
     private String email;
     private String password;
     private Long shoppingCartId;
-    private String city;
-    private String userAddress;
-    private String cep;
-    private String complement;
-    private int houseNumber;
-    private String neighborhood;
+    private Long addressId;
 
 
 
@@ -56,51 +51,11 @@ public class UserDTO {
         this.shoppingCartId = shoppingCartId;
     }
 
-    public String getCity() {
-        return city;
+    public Long getAddressId() {
+        return addressId;
     }
 
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getUserAddress() {
-        return userAddress;
-    }
-
-    public void setUserAddress(String userAddress) {
-        this.userAddress = userAddress;
-    }
-
-    public String getCep() {
-        return cep;
-    }
-
-    public void setCep(String cep) {
-        this.cep = cep;
-    }
-
-    public String getComplement() {
-        return complement;
-    }
-
-    public void setComplement(String complement) {
-        this.complement = complement;
-    }
-
-    public int getHouseNumber() {
-        return houseNumber;
-    }
-
-    public void setHouseNumber(int houseNumber) {
-        this.houseNumber = houseNumber;
-    }
-
-    public String getNeighborhood() {
-        return neighborhood;
-    }
-
-    public void setNeighborhood(String neighborhood) {
-        this.neighborhood = neighborhood;
+    public void setAddressId(Long addressId) {
+        this.addressId = addressId;
     }
 }

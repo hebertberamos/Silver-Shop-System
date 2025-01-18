@@ -13,12 +13,6 @@ public class UserMapper {
         entity.setEmail(dto.getEmail());
         entity.setPassword(dto.getPassword());
 //        shopping cart
-        entity.setCity(dto.getCity());
-        entity.setUserAddress(dto.getUserAddress());
-        entity.setCep(dto.getCep());
-        entity.setComplement(dto.getComplement());
-        entity.setHouseNumber(dto.getHouseNumber());
-        entity.setNeighborhood(dto.getNeighborhood());
 
         return entity;
     }
@@ -29,13 +23,8 @@ public class UserMapper {
         dto.setUserName(entity.getUserName());
         dto.setEmail(entity.getEmail());
         dto.setPassword(entity.getPassword());
-//        shopping cart
-        dto.setCity(entity.getCity());
-        dto.setUserAddress(entity.getUserAddress());
-        dto.setCep(entity.getCep());
-        dto.setComplement(entity.getComplement());
-        dto.setHouseNumber(entity.getHouseNumber());
-        dto.setNeighborhood(entity.getNeighborhood());
+        dto.setShoppingCartId(entity.getShoppingCart().getId());
+        dto.setAddressId(entity.getAddress().getId());
 
         return dto;
     }

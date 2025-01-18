@@ -1,5 +1,6 @@
 package com.web.hevepratas.services;
 
+import com.web.hevepratas.dtos.AddressDTO;
 import com.web.hevepratas.dtos.UserDTO;
 import com.web.hevepratas.entities.ShoppingCart;
 import com.web.hevepratas.entities.User;
@@ -11,6 +12,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class UserService {
 
@@ -20,6 +23,7 @@ public class UserService {
     private UserMapper userMapper;
     @Autowired
     private ShoppingCartService shoppingCartService;
+    @Autowired AddressService addressService;
 
     public ResponseEntity<Page<UserDTO>> findAll(Pageable pageable){
         Page<User> page = repository.findAllUsers(pageable);
@@ -51,5 +55,12 @@ public class UserService {
         catch (Exception e){
             return ResponseEntity.badRequest().body("Error while deleting user");
         }
+    }
+
+    public ResponseEntity<String> addNewAddress(Long userId, AddressDTO dto) throws Exception {
+        Optional<User> userOptional = repository.findById(userId);
+        User userEntity = userOptional.orElseThrow(() -> new Exception("User id not found"));
+
+        return addressService.saveNewAddress(dto, userEntity);
     }
 }

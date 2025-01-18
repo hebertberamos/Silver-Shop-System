@@ -20,18 +20,8 @@ public class User {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "shoppingCart_id")
     private ShoppingCart shoppingCart;
-    @Column(name = "user_city")
-    private String city;
-    @Column(name = "user_address")
-    private String userAddress;
-    @Column(name = "user_cep")
-    private String cep;
-    @Column(name = "user_address_complement")
-    private String complement;
-    @Column(name = "user_house_number")
-    private int houseNumber;
-    @Column(name = "user_neighborhood")
-    private String neighborhood;
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Address address;
 
 
 
@@ -75,51 +65,11 @@ public class User {
         this.shoppingCart = shoppingCart;
     }
 
-    public String getCity() {
-        return city;
+    public Address getAddress() {
+        return address;
     }
 
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getUserAddress() {
-        return userAddress;
-    }
-
-    public void setUserAddress(String userAddress) {
-        this.userAddress = userAddress;
-    }
-
-    public String getCep() {
-        return cep;
-    }
-
-    public void setCep(String cep) {
-        this.cep = cep;
-    }
-
-    public String getComplement() {
-        return complement;
-    }
-
-    public void setComplement(String complement) {
-        this.complement = complement;
-    }
-
-    public int getHouseNumber() {
-        return houseNumber;
-    }
-
-    public void setHouseNumber(int houseNumber) {
-        this.houseNumber = houseNumber;
-    }
-
-    public String getNeighborhood() {
-        return neighborhood;
-    }
-
-    public void setNeighborhood(String neighborhood) {
-        this.neighborhood = neighborhood;
+    public void setAddress(Address address) {
+        this.address = address;
     }
 }
