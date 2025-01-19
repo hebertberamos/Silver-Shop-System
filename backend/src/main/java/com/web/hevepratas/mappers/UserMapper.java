@@ -24,7 +24,12 @@ public class UserMapper {
         dto.setEmail(entity.getEmail());
         dto.setPassword(entity.getPassword());
         dto.setShoppingCartId(entity.getShoppingCart().getId());
-        dto.setAddressId(entity.getAddress().getId());
+
+        if(entity.getAddress() != null){
+            dto.setAddressId(entity.getAddress().getId());
+        } else {
+            dto.setAddressId(null);
+        }
 
         return dto;
     }

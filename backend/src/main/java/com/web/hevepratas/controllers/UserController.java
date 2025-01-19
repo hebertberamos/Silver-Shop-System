@@ -2,6 +2,8 @@ package com.web.hevepratas.controllers;
 
 import com.web.hevepratas.dtos.AddressDTO;
 import com.web.hevepratas.dtos.UserDTO;
+import com.web.hevepratas.entities.User;
+import com.web.hevepratas.services.AuthenticationService;
 import com.web.hevepratas.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,6 +17,16 @@ public class UserController {
 
     @Autowired
     private UserService service;
+    @Autowired
+    private AuthenticationService authenticationService;
+
+    //just to test
+    @GetMapping(value = "/me")
+    public ResponseEntity<User> authenticatedUser(){
+        User currentUser = authenticationService.authenticatedUser();
+
+        return ResponseEntity.ok(currentUser);
+    }
 
     @GetMapping(value = "/all")
     public ResponseEntity<Page<UserDTO>> findAllUser(Pageable pageable){
