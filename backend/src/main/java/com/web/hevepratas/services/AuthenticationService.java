@@ -7,6 +7,7 @@ import com.web.hevepratas.entities.User;
 import com.web.hevepratas.entities.enums.UserRole;
 import com.web.hevepratas.mappers.UserMapper;
 import com.web.hevepratas.repositories.UserRepository;
+import com.web.hevepratas.responses.LoginResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,13 +22,15 @@ public class AuthenticationService {
     @Autowired
     private UserRepository userRepository;
     @Autowired
+    private JwtService jwtService;
+    @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
     private AuthenticationManager authenticationManager;
     @Autowired
     private UserMapper userMapper;
 
-    public User register(UserDTO dto){
+    public UserDTO register(UserDTO dto){
         User userEntity = userMapper.fromUserDtoToEntity(dto);
         String encryptedPassword = passwordEncoder.encode(userEntity.getPassword());
         userEntity.setPassword(encryptedPassword);
@@ -36,23 +39,29 @@ public class AuthenticationService {
         ShoppingCart shoppingCart = new ShoppingCart(userEntity);
         userEntity.setShoppingCart(shoppingCart);
 
-        return userRepository.save(userEntity);
+        userRepository.save(userEntity);
+
+        return userMapper.fromEntityToDto(userEntity);
     }
 
-    public User login(LoginDTO dto){
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        dto.getEmail(),
-                        dto.getPassword()
-                )
-        );
+    public LoginResponse login(LoginDTO dto){
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(dto.getEmail(),dto.getPassword()));
 
-        return userRepository.findByEmail(dto.getEmail());
+        User userAuthenticated = userRepository.findByEmail(dto.getEmail());
+
+        String token = jwtService.generateToken(userAuthenticated);
+
+        LoginResponse loginResponse = new LoginResponse();
+        loginResponse.setToken(token);
+        loginResponse.setExpiresIn(jwtService.getExpirationTime());
+
+        return loginResponse;
     }
 
-    public User authenticatedUser(){
+    public UserDTO authenticatedUser(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = (User) authentication.getPrincipal();
-        return currentUser;
+        return userMapper.fromEntityToDto(currentUser);
+
     }
 }

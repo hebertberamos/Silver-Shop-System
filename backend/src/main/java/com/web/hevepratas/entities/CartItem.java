@@ -9,7 +9,7 @@ public class CartItem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false, name = "cart_item_id")
+    @Column(nullable = false, name = "id")
     private Long id;
     @ManyToOne
     @JoinColumn(name = "shopping_cart_id")

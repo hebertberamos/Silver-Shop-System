@@ -17,7 +17,7 @@ public class User implements UserDetails, Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false, name = "user_id")
+    @Column(nullable = false, name = "id")
     private Long id;
     @Column(name = "user_role")
     @Enumerated(EnumType.STRING)

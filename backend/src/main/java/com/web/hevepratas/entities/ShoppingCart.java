@@ -11,7 +11,7 @@ public class ShoppingCart {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false, name = "shopping_cart_id")
+    @Column(nullable = false, name = "id")
     private Long id;
 
     @OneToOne(mappedBy = "shoppingCart")

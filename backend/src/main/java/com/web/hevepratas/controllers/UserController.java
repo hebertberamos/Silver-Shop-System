@@ -22,8 +22,8 @@ public class UserController {
 
     //just to test
     @GetMapping(value = "/me")
-    public ResponseEntity<User> authenticatedUser(){
-        User currentUser = authenticationService.authenticatedUser();
+    public ResponseEntity<UserDTO> authenticatedUser(){
+        UserDTO currentUser = authenticationService.authenticatedUser();
 
         return ResponseEntity.ok(currentUser);
     }
