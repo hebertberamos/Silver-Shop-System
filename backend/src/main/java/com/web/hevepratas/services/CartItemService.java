@@ -3,6 +3,7 @@ package com.web.hevepratas.services;
 import com.web.hevepratas.entities.CartItem;
 import com.web.hevepratas.entities.Product;
 import com.web.hevepratas.entities.ShoppingCart;
+import com.web.hevepratas.entities.User;
 import com.web.hevepratas.repositories.CartItemRepository;
 import com.web.hevepratas.repositories.ProductRepository;
 import com.web.hevepratas.repositories.ShoppingCartRepository;
@@ -26,19 +27,28 @@ public class CartItemService {
     private ProductRepository productRepository;
     @Autowired ShoppingCartService shoppingCartService;
 
-    public ResponseEntity<String> saveCartItem(Long productId, ShoppingCart cartEntity, int quantity) throws Exception {
-        CartItem cartItemEntity = new CartItem();
+    public ResponseEntity<String> saveCartItem(Product productEntity, User userEntity, int quantity) throws Exception {
 
-        Optional<Product> productOptional = productRepository.findById(productId);
-        Product productEntity = productOptional.orElseThrow(() -> new Exception("product id not found"));
+        //catch the cart item that have the product id and shopping cart id as the ones was passed.
+        CartItem cartItemEntity = repository.findByProductIdAndShoppingCartId(productEntity.getId(), userEntity.getShoppingCart().getId());
 
-        cartItemEntity.setShoppingCart(cartEntity);
-        cartItemEntity.setProduct(productEntity);
-        cartItemEntity.setQuantity(quantity);
+        if(cartItemEntity == null){
+            cartItemEntity = new CartItem();
+            Optional<ShoppingCart> cartOptional = shoppingCartRepository.findById(userEntity.getShoppingCart().getId());
+            ShoppingCart cartEntity = cartOptional.orElseThrow(() -> new Exception("Shopping cart id not found!"));
+
+            cartItemEntity.setShoppingCart(cartEntity);
+            cartItemEntity.setProduct(productEntity);
+            cartItemEntity.setQuantity(quantity);
+
+            repository.save(cartItemEntity);
+
+            return shoppingCartService.addNewItemToCart(cartEntity, cartItemEntity);
+        }
+
+        cartItemEntity.setQuantity(cartItemEntity.getQuantity() + quantity);
 
         repository.save(cartItemEntity);
-
-        return shoppingCartService.addCartItemToCart(cartEntity.getId(), cartItemEntity);
-
+        return ResponseEntity.ok("Item quantity updated successfully!");
     }
 }

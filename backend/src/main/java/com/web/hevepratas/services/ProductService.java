@@ -1,6 +1,7 @@
 package com.web.hevepratas.services;
 
 import com.web.hevepratas.dtos.ProductDTO;
+import com.web.hevepratas.dtos.UserDTO;
 import com.web.hevepratas.entities.Product;
 import com.web.hevepratas.entities.ShoppingCart;
 import com.web.hevepratas.entities.User;
@@ -8,6 +9,7 @@ import com.web.hevepratas.entities.enums.Gender;
 import com.web.hevepratas.entities.enums.ProductSubType;
 import com.web.hevepratas.entities.enums.ProductType;
 import com.web.hevepratas.mappers.ProductMapper;
+import com.web.hevepratas.mappers.UserMapper;
 import com.web.hevepratas.repositories.ProductRepository;
 import com.web.hevepratas.repositories.ShoppingCartRepository;
 import com.web.hevepratas.repositories.UserRepository;
@@ -32,6 +34,10 @@ public class ProductService {
     private ProductMapper mapper;
     @Autowired
     private CartItemService cartItemService;
+    @Autowired
+    private AuthenticationService authenticationService;
+    @Autowired
+    private UserMapper userMapper;
 
     public ResponseEntity<Page<ProductDTO>> allProducts(ProductType type, ProductSubType subType, Gender gender, Pageable pageable) {
         Page<Product> page = repository.findAllProducts(type, subType, gender, pageable);
@@ -71,14 +77,15 @@ public class ProductService {
         }
     }
 
-    public ResponseEntity<String> addProductToCart(Long id, Long userId, int quantity) throws Exception {
+    public ResponseEntity<String> addProductToCart(Long id,  int quantity) throws Exception {
 
-        Optional<User> userOptional = userRepository.findById(userId);
-        User userEntity = userOptional.orElseThrow(() -> new Exception("user id not found"));
+        UserDTO userDto = authenticationService.authenticatedUser();
+        User userEntity = userMapper.fromUserDtoToEntity(userDto);
 
-        Optional<ShoppingCart> cartOptional = shoppingCartRepository.findById(userEntity.getShoppingCart().getId());
-        ShoppingCart cartEntity = cartOptional.orElseThrow(() -> new Exception("cart id not found"));
+        Optional<Product> productOptional = repository.findById(id);
+        Product productEntity = productOptional.orElseThrow(() -> new Exception("product id not found"));
 
-        return cartItemService.saveCartItem(id, cartEntity, quantity);
+        // Here I'll paste a user entity and a product entity
+        return cartItemService.saveCartItem(productEntity, userEntity, quantity);
     }
 }

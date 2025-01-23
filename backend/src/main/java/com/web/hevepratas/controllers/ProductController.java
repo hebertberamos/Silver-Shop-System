@@ -37,9 +37,14 @@ public class ProductController {
         return service.updateProduct(id, dto);
     }
 
-    @PostMapping("/add/{id}/to-user/{userId}")
-    public ResponseEntity<String> addProductToCart(@PathVariable Long id, @PathVariable Long userId, @RequestParam int quantity) throws Exception {
-        return service.addProductToCart(id, userId, quantity);
+    @PostMapping("/add/{productId}/to-card")
+    public ResponseEntity<String> addProductToCart(
+            @PathVariable Long productId,
+            @RequestParam (required = true, defaultValue = "1") int quantity
+    ) throws Exception
+    {
+
+        return service.addProductToCart(productId, quantity);
     }
 
 }

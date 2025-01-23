@@ -26,14 +26,11 @@ public class ShoppingCartService {
         return repository.save(cart);
     }
 
-    public ResponseEntity<String> addCartItemToCart(Long cartId, CartItem cartItemEntity) throws Exception {
-        Optional<ShoppingCart> cartOptional = repository.findById(cartId);
-        ShoppingCart cartEntity = cartOptional.orElseThrow(() -> new Exception("Car id no found."));
-
+    public ResponseEntity<String> addNewItemToCart(ShoppingCart cartEntity, CartItem cartItemEntity) {
         List<CartItem> items = cartEntity.getItems();
         items.add(cartItemEntity);
 
-        return ResponseEntity.ok("New item saved to cart with id (" + cartId + ")");
+        return ResponseEntity.ok("New item saved to cart with id (" + cartEntity.getId() + ")");
     }
 
 }

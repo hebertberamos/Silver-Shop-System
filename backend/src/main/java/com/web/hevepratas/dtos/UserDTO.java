@@ -1,8 +1,11 @@
 package com.web.hevepratas.dtos;
 
+import com.web.hevepratas.entities.enums.UserRole;
+
 public class UserDTO {
 
     private Long id;
+    private UserRole role;
     private String userName;
     private String email;
     private String password;
@@ -57,5 +60,13 @@ public class UserDTO {
 
     public void setAddressId(Long addressId) {
         this.addressId = addressId;
+    }
+
+    public UserRole getRole() {
+        return role;
+    }
+
+    public void setRole(UserRole role) {
+        this.role = role;
     }
 }
