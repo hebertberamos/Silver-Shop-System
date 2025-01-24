@@ -26,6 +26,8 @@ public class User implements UserDetails, Serializable {
     private UserRole role;
     @Column(name = "user_name")
     private String userName;
+    @Column(name = "CPF", unique = true)
+    private String cpf;
     @Column(name = "user_email", unique = true)
     @Email(regexp = "[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,3}", flags = Pattern.Flag.CASE_INSENSITIVE)
     private String email;
@@ -53,6 +55,14 @@ public class User implements UserDetails, Serializable {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
     }
 
     public String getEmail() {

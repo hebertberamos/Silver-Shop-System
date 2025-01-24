@@ -8,6 +8,7 @@ public class UserDTO {
     private Long id;
     private UserRole role;
     private String userName;
+    private String cpf;
     @Email(message = "Invalid email. \nPlease paste a valid email.")
     private String email;
     private String password;
@@ -30,6 +31,14 @@ public class UserDTO {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
     }
 
     public String getEmail() {

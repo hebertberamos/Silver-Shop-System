@@ -25,6 +25,7 @@ public class UserMapper {
         entity.setId(dto.getId());
         entity.setRole(dto.getRole());
         entity.setUserName(dto.getUserName());
+        entity.setCpf(dto.getCpf());
         entity.setEmail(dto.getEmail());
         entity.setPassword(dto.getPassword());
 
@@ -53,7 +54,9 @@ public class UserMapper {
     public UserDTO fromEntityToDto(User entity){
         UserDTO dto = new UserDTO();
         dto.setId(entity.getId());
+        dto.setRole(entity.getRole());
         dto.setUserName(entity.getUserName());
+        dto.setCpf(entity.getCpf());
         dto.setEmail(entity.getEmail());
         dto.setPassword(entity.getPassword());
         dto.setShoppingCartId(entity.getShoppingCart().getId());
