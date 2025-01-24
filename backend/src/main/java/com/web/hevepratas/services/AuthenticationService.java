@@ -31,17 +31,28 @@ public class AuthenticationService {
     private UserMapper userMapper;
 
     public UserDTO register(UserDTO dto){
-        User userEntity = userMapper.fromUserDtoToEntity(dto);
-        String encryptedPassword = passwordEncoder.encode(userEntity.getPassword());
-        userEntity.setPassword(encryptedPassword);
-        userEntity.setRole(UserRole.USER);
+        boolean emailAlreadyExist = validateEmailAlreadyExistInDatabase(dto.getEmail());
 
-        ShoppingCart shoppingCart = new ShoppingCart(userEntity);
-        userEntity.setShoppingCart(shoppingCart);
+        if(emailAlreadyExist == false) {
+            try {
+                User userEntity = userMapper.fromUserDtoToEntity(dto);
+                String encryptedPassword = passwordEncoder.encode(userEntity.getPassword());
+                userEntity.setPassword(encryptedPassword);
+                userEntity.setRole(UserRole.USER);
 
-        userRepository.save(userEntity);
+                ShoppingCart shoppingCart = new ShoppingCart(userEntity);
+                userEntity.setShoppingCart(shoppingCart);
 
-        return userMapper.fromEntityToDto(userEntity);
+                userRepository.save(userEntity);
+
+                return userMapper.fromEntityToDto(userEntity);
+            }
+            catch(Exception e){
+                System.out.println("LOG - Error trying to save new user");
+            }
+        }
+
+        return null;
     }
 
     public LoginResponse login(LoginDTO dto){
@@ -63,5 +74,16 @@ public class AuthenticationService {
         User currentUser = (User) authentication.getPrincipal();
         return userMapper.fromEntityToDto(currentUser);
 
+    }
+
+
+    private boolean validateEmailAlreadyExistInDatabase(String dtoEmail){
+        User userValidator = userRepository.findByEmail(dtoEmail);
+
+        if(userValidator != null){
+            return true;
+        }
+
+        return false;
     }
 }

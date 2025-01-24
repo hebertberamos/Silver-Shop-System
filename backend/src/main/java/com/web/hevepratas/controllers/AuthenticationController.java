@@ -21,6 +21,11 @@ public class AuthenticationController {
     @PostMapping(value = "/register")
     public ResponseEntity<String> register(@RequestBody UserDTO dto){
         dto = authenticationService.register(dto);
+
+        if(dto == null){
+            return ResponseEntity.badRequest().body("Something went wrong to register the new user");
+        }
+
         return ResponseEntity.ok("User registered successfully! \nUser email: " + dto.getEmail());
     }
 

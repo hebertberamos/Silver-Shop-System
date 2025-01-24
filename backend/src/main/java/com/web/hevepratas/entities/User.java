@@ -2,6 +2,8 @@ package com.web.hevepratas.entities;
 
 import com.web.hevepratas.entities.enums.UserRole;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Pattern;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,7 +26,8 @@ public class User implements UserDetails, Serializable {
     private UserRole role;
     @Column(name = "user_name")
     private String userName;
-    @Column(name = "user_email")
+    @Column(name = "user_email", unique = true)
+    @Email(regexp = "[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,3}", flags = Pattern.Flag.CASE_INSENSITIVE)
     private String email;
     @Column(name = "user_password")
     private String password;

@@ -1,12 +1,14 @@
 package com.web.hevepratas.dtos;
 
 import com.web.hevepratas.entities.enums.UserRole;
+import jakarta.validation.constraints.Email;
 
 public class UserDTO {
 
     private Long id;
     private UserRole role;
     private String userName;
+    @Email(message = "Invalid email. \nPlease paste a valid email.")
     private String email;
     private String password;
     private Long shoppingCartId;
