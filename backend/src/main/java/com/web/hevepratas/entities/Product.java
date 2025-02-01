@@ -5,6 +5,7 @@ import com.web.hevepratas.entities.enums.ProductSubType;
 import com.web.hevepratas.entities.enums.ProductType;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -15,6 +16,8 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false, name = "id")
     private Long id;
+   @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProductImage> images;
     @Column(name = "product_name")
     private String name;
     @Column(name = "product_price")
@@ -37,7 +40,9 @@ public class Product {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<CartItem> cartItems;
 
-
+    public Product() {
+        this.images = new ArrayList<>();
+    }
 
     public Long getId() {
         return id;
@@ -45,6 +50,10 @@ public class Product {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public List<ProductImage> getImages() {
+        return images;
     }
 
     public String getName() {

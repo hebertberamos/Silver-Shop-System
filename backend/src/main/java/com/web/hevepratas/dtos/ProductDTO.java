@@ -17,6 +17,7 @@ public class ProductDTO {
     private Double size;
     private Integer quantityAvailable;
     private List<CartItemDTO> cartItems;
+    private List<ProductImageDTO> images;
 
 
 
@@ -94,5 +95,9 @@ public class ProductDTO {
 
     public List<CartItemDTO> getCartItems() {
         return cartItems;
+    }
+
+    public List<ProductImageDTO> getImages() {
+        return images;
     }
 }

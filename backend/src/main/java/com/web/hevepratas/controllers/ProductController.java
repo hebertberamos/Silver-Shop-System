@@ -8,11 +8,13 @@ import com.web.hevepratas.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/product")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class ProductController {
 
     @Autowired
@@ -28,8 +30,13 @@ public class ProductController {
     }
 
     @PostMapping(value = "/new")
-    public ResponseEntity<String> addNewProduct(@RequestBody ProductDTO dto){
-        return service.addNewProduct(dto);
+    public ResponseEntity<String> saveNewProduct(@RequestBody ProductDTO dto){
+        return service.saveNewProduct(dto);
+    }
+
+    @GetMapping("/get/{id}")
+    public ResponseEntity<ProductDTO> findById(@PathVariable Long id) throws Exception {
+        return service.findById(id);
     }
 
     @PostMapping(value = "/update/{id}")

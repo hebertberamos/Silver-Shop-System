@@ -3,11 +3,12 @@ package com.web.hevepratas.services;
 import com.web.hevepratas.dtos.ProductDTO;
 import com.web.hevepratas.dtos.UserDTO;
 import com.web.hevepratas.entities.Product;
-import com.web.hevepratas.entities.ShoppingCart;
+import com.web.hevepratas.entities.ProductImage;
 import com.web.hevepratas.entities.User;
 import com.web.hevepratas.entities.enums.Gender;
 import com.web.hevepratas.entities.enums.ProductSubType;
 import com.web.hevepratas.entities.enums.ProductType;
+import com.web.hevepratas.mappers.ProductImageMapper;
 import com.web.hevepratas.mappers.ProductMapper;
 import com.web.hevepratas.mappers.UserMapper;
 import com.web.hevepratas.repositories.ProductRepository;
@@ -19,7 +20,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
@@ -37,7 +40,11 @@ public class ProductService {
     @Autowired
     private AuthenticationService authenticationService;
     @Autowired
+    private ProductImageService productImageService;
+    @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private ProductImageMapper productImageMapper;
 
     public ResponseEntity<Page<ProductDTO>> allProducts(ProductType type, ProductSubType subType, Gender gender, Pageable pageable) {
         Page<Product> page = repository.findAllProducts(type, subType, gender, pageable);
@@ -45,10 +52,32 @@ public class ProductService {
         return ResponseEntity.ok(page.map(entity -> mapper.fromEntityToDto(entity)));
     }
 
-    public ResponseEntity<String> addNewProduct(ProductDTO dto) {
+    public ResponseEntity<ProductDTO> findById(Long id) throws Exception {
+        Optional<Product> optionalProduct = repository.findById(id);
+        Product productEntity = optionalProduct.orElseThrow(() -> new Exception("Error trying to find product by id " + id));
+
+        if(productEntity != null){
+            ProductDTO dto = mapper.fromEntityToDto(productEntity);
+            return ResponseEntity.ok(dto);
+        }
+
+        return ResponseEntity.badRequest().body(null);
+    }
+
+    public ResponseEntity<String> saveNewProduct(ProductDTO dto) {
         try {
             Product entity = mapper.fromDtoToEntity(dto);
+
+            List<ProductImage> productImages = dto.getImages().stream().map(image -> productImageMapper.fromDtoToEntity(image)).collect(Collectors.toList());
+
+            for(ProductImage image : productImages){
+                image.setProduct(entity);
+                entity.getImages().add(image);
+            }
+
             repository.save(entity);
+            productImageService.saveImages(productImages);
+
             return ResponseEntity.ok("Product saved successfully");
         }
         catch(Exception e) {

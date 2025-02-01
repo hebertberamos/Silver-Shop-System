@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
+    // All products with some filters
     @Query("SELECT p FROM Product p " +
             "WHERE (:type IS NULL AND :sub_type IS NULL AND :gender IS NULL) " +
             "OR (p.gender = :gender AND (:type IS NULL OR p.type = :type) AND (:sub_type IS NULL OR p.subType = :sub_type)) " +
