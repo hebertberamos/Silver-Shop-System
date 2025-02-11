@@ -1,5 +1,6 @@
 package com.web.hevepratas.configs;
 
+import com.web.hevepratas.entities.enums.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,7 +29,14 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/auth/**").permitAll()
+//                        .requestMatchers("/auth/**").permitAll()
+//                        .requestMatchers("/product/all").permitAll()
+//                        .requestMatchers("/product/new").hasRole("ADMIN")
+//                        .requestMatchers("/product/get/{id}").permitAll()
+//                        .requestMatchers("/product/update/{id}").hasRole("ADMIN")
+//                        .requestMatchers("/users/").hasRole("ADMIN")
+//                        .requestMatchers("/users/add/address").authenticated()
+//                        .requestMatchers("/users/me").authenticated()
                         .anyRequest().permitAll()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

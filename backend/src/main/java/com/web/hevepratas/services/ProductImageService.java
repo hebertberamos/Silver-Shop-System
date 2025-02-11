@@ -22,4 +22,9 @@ public class ProductImageService {
 
     }
 
+
+    public List<ProductImage> findByProductId(Long productId){
+        return repository.findByProductId(productId);
+    }
+
 }

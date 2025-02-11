@@ -1,17 +1,25 @@
 package com.web.hevepratas.mappers;
 
 import com.web.hevepratas.dtos.ProductDTO;
+import com.web.hevepratas.dtos.ProductImageDTO;
 import com.web.hevepratas.entities.Product;
+import com.web.hevepratas.entities.ProductImage;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
+import java.util.List;
+
 
 @Component
 public class ProductMapper {
 
+    @Autowired
+    ProductImageMapper productImageMapper;
+
     public Product fromDtoToEntity(ProductDTO dto){
         Product entity = new Product();
 
+        entity.setId(dto.getId());
         entity.setName(dto.getName());
         entity.setPrice(dto.getPrice());
         entity.setGender(dto.getGender());
@@ -29,6 +37,7 @@ public class ProductMapper {
     public ProductDTO fromEntityToDto(Product entity){
         ProductDTO dto = new ProductDTO();
 
+        dto.setId(entity.getId());
         dto.setName(entity.getName());
         dto.setPrice(entity.getPrice());
         dto.setGender(entity.getGender());
@@ -37,6 +46,14 @@ public class ProductMapper {
         dto.setDescription(entity.getDescription());
         dto.setSize(entity.getSize());
         dto.setQuantityAvailable(entity.getQuantityAvailable());
+
+        List<ProductImage> productImages = entity.getImages();
+
+        if(!entity.getImages().isEmpty()){
+            for(ProductImage image : productImages){
+                dto.getImages().add(productImageMapper.fromEntityToDto(image));
+            }
+        }
 
         return dto;
     }

@@ -3,6 +3,8 @@ package com.web.hevepratas.dtos;
 import com.web.hevepratas.entities.enums.Gender;
 import com.web.hevepratas.entities.enums.ProductSubType;
 import com.web.hevepratas.entities.enums.ProductType;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class ProductDTO {
@@ -16,8 +18,8 @@ public class ProductDTO {
     private String description;
     private Double size;
     private Integer quantityAvailable;
-    private List<CartItemDTO> cartItems;
-    private List<ProductImageDTO> images;
+//    private List<CartItemDTO> cartItems = new ArrayList<>();
+    private List<ProductImageDTO> images = new ArrayList<>();
 
 
 
@@ -93,9 +95,9 @@ public class ProductDTO {
         this.quantityAvailable = quantityAvailable;
     }
 
-    public List<CartItemDTO> getCartItems() {
-        return cartItems;
-    }
+//    public List<CartItemDTO> getCartItems() {
+//        return cartItems;
+//    }
 
     public List<ProductImageDTO> getImages() {
         return images;

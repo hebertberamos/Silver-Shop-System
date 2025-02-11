@@ -86,4 +86,12 @@ public class AuthenticationService {
 
         return false;
     }
+
+    public void validateSelfOrAdmin(String email){
+        User user = userMapper.fromUserDtoToEntity(authenticatedUser());
+
+        if(!user.getEmail().equals(email) || user.getRole() != UserRole.ADMIN){
+            System.out.println("Access denied"); // this guy will be changed to a personal Exception. MODIFY
+        }
+    }
 }

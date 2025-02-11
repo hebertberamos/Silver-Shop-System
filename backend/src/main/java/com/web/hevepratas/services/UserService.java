@@ -23,7 +23,10 @@ public class UserService {
     private UserMapper userMapper;
     @Autowired
     private ShoppingCartService shoppingCartService;
-    @Autowired AddressService addressService;
+    @Autowired
+    private AddressService addressService;
+    @Autowired
+    private AuthenticationService authenticationService;
 
     public ResponseEntity<Page<UserDTO>> findAll(Pageable pageable){
         Page<User> page = repository.findAllUsers(pageable);
@@ -57,10 +60,18 @@ public class UserService {
         }
     }
 
-    public ResponseEntity<String> addNewAddress(Long userId, AddressDTO dto) throws Exception {
-        Optional<User> userOptional = repository.findById(userId);
-        User userEntity = userOptional.orElseThrow(() -> new Exception("User id not found"));
+    public ResponseEntity<String> addNewAddress( AddressDTO dto) throws Exception {
+
+        UserDTO userDto = authenticationService.authenticatedUser();
+        User userEntity = userMapper.fromUserDtoToEntity(userDto);
 
         return addressService.saveNewAddress(dto, userEntity);
+    }
+
+    public UserDTO getUserByEmail(String email) {
+
+        User userEntity = repository.findByEmail(email);
+        return userMapper.fromEntityToDto(userEntity);
+
     }
 }

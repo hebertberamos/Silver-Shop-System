@@ -40,6 +40,7 @@ public class Product {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<CartItem> cartItems;
 
+
     public Product() {
         this.images = new ArrayList<>();
     }
