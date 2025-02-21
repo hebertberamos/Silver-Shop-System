@@ -33,7 +33,7 @@ function DefaultHeader() {
                 <nav className={style.navFavicon}>
                     <Link><img src={searchIcon} alt="search-icon" /></Link>
                     <Link><img src={cartIcon} alt="Shopping cart" /></Link>
-                    <Link  to="/user" ><img src={userIcon} alt="User icon" /></Link>
+                    <Link  to="/login" ><img src={userIcon} alt="User icon" /></Link>
                 </nav>
             </div>
         </div>

@@ -1,9 +1,5 @@
-
-
-
 .defaultHeader {
     height: 107px; 
-    margin: 0 96px; 
     display: flex; 
     align-items: center; 
     justify-content: space-between; 
