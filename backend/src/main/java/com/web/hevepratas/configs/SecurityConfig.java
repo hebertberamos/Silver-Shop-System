@@ -2,11 +2,14 @@ package com.web.hevepratas.configs;
 
 import com.web.hevepratas.entities.enums.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.CustomEditorConfigurer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -14,6 +17,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.Currency;
 import java.util.List;
 
 @Configuration
@@ -27,8 +31,9 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        return http.csrf(csrf -> csrf.disable())
+        return http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
+<<<<<<< Updated upstream
 //                        .requestMatchers("/auth/**").permitAll()
 //                        .requestMatchers("/product/all").permitAll()
 //                        .requestMatchers("/product/new").hasRole("ADMIN")
@@ -37,6 +42,17 @@ public class SecurityConfig {
 //                        .requestMatchers("/users/").hasRole("ADMIN")
 //                        .requestMatchers("/users/add/address").authenticated()
 //                        .requestMatchers("/users/me").authenticated()
+=======
+                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/product/all").permitAll()
+                        .requestMatchers("/product/new").hasRole("ADMIN")
+                        .requestMatchers("/product/get/{id}").permitAll()
+                        .requestMatchers("/product/update/{id}").hasRole("ADMIN")
+                        .requestMatchers("/users/").hasRole("ADMIN")
+                        .requestMatchers("/users/add/address").authenticated()
+                        .requestMatchers("/users/me").authenticated()
+                        .requestMatchers("/user").permitAll()
+>>>>>>> Stashed changes
                         .anyRequest().permitAll()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

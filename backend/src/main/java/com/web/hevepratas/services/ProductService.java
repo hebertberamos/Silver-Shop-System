@@ -17,6 +17,8 @@ import com.web.hevepratas.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -47,10 +49,10 @@ public class ProductService {
     @Autowired
     private ProductImageMapper productImageMapper;
 
-    public ResponseEntity<Page<ProductDTO>> allProducts(ProductType type, ProductSubType subType, Gender gender, Pageable pageable) {
+    public Page<ProductDTO> allProducts(ProductType type, ProductSubType subType, Gender gender, Pageable pageable) {
         Page<Product> page = repository.findAllProducts(type, subType, gender, pageable);
 
-        return ResponseEntity.ok(page.map(entity -> mapper.fromEntityToDto(entity)));
+        return page.map(entity -> mapper.fromEntityToDto(entity));
     }
 
     public ResponseEntity<ProductDTO> findById(Long id) throws Exception {
@@ -118,5 +120,34 @@ public class ProductService {
 
         // Here I'll paste a user entity and a product entity
         return cartItemService.saveCartItem(productEntity, userEntity, quantity);
+    }
+
+    public ResponseEntity<?> processProductPurchase(int quantity, Long productId) {
+        try {
+            //Get the user.
+            UserDTO userDto = authenticationService.authenticatedUser();
+            User userEntity = userMapper.fromUserDtoToEntity(userDto);
+
+            //Check if user already have an address instantiated for your self
+            if(userEntity.getAddress() == null) {
+                return ResponseEntity.status(HttpStatus.PRECONDITION_REQUIRED).body("Você precisa de um endereço para efetuar sua compra. Vamos adicionar um!");
+            }
+
+            //Get product by id
+            Optional<Product> optional = repository.findById(productId);
+            Product productEntity = optional.orElseThrow(() -> new Exception("Infelizmente o com o id " + productId + " não foi encontrado..."));
+
+            //Reduce the quantity of products
+            int updatedAvailableQuantity = productEntity.getQuantityAvailable() - quantity;
+            productEntity.setQuantityAvailable(updatedAvailableQuantity);
+
+            //if all is good, email user about the purchase
+
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return ResponseEntity.ok("Product purchased");
     }
 }

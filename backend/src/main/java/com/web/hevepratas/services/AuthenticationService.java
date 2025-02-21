@@ -30,10 +30,10 @@ public class AuthenticationService {
     @Autowired
     private UserMapper userMapper;
 
-    public UserDTO register(UserDTO dto){
+    public String register(UserDTO dto){
         boolean emailAlreadyExist = validateEmailAlreadyExistInDatabase(dto.getEmail());
 
-        if(emailAlreadyExist == false) {
+        if(!emailAlreadyExist) {
             try {
                 User userEntity = userMapper.fromUserDtoToEntity(dto);
                 String encryptedPassword = passwordEncoder.encode(userEntity.getPassword());
@@ -45,14 +45,15 @@ public class AuthenticationService {
 
                 userRepository.save(userEntity);
 
-                return userMapper.fromEntityToDto(userEntity);
+                return "Well done, the register was done successfully!";
             }
             catch(Exception e){
                 System.out.println("LOG - Error trying to save new user");
+                return "Something went wrong to register the new user";
             }
         }
 
-        return null;
+        return "The chosen email is already in use";
     }
 
     public LoginResponse login(LoginDTO dto){
@@ -76,6 +77,13 @@ public class AuthenticationService {
 
     }
 
+    public void validateSelfOrAdmin(String email){
+        User user = userMapper.fromUserDtoToEntity(authenticatedUser());
+
+        if(!user.getEmail().equals(email) || user.getRole() != UserRole.ADMIN){
+            System.out.println("Access denied"); // this guy will be changed to a personal Exception. MODIFY
+        }
+    }
 
     private boolean validateEmailAlreadyExistInDatabase(String dtoEmail){
         User userValidator = userRepository.findByEmail(dtoEmail);

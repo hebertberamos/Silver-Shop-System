@@ -6,13 +6,10 @@ import com.web.hevepratas.responses.LoginResponse;
 import com.web.hevepratas.services.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.bind.annotation.*;
 @RequestMapping("/auth")
 @RestController
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class AuthenticationController {
 
     @Autowired
@@ -20,13 +17,7 @@ public class AuthenticationController {
 
     @PostMapping(value = "/register")
     public ResponseEntity<String> register(@RequestBody UserDTO dto){
-        dto = authenticationService.register(dto);
-
-        if(dto == null){
-            return ResponseEntity.badRequest().body("Something went wrong to register the new user");
-        }
-
-        return ResponseEntity.ok("User registered successfully! \nUser email: " + dto.getEmail());
+        return ResponseEntity.ok(authenticationService.register(dto));
     }
 
     @PostMapping(value = "/login")
