@@ -39,6 +39,9 @@ public class User implements UserDetails, Serializable {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Address address;
 
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private FavoriteList favoriteList;
+
 
 
     public Long getId() {
@@ -103,6 +106,14 @@ public class User implements UserDetails, Serializable {
 
     public void setRole(UserRole role) {
         this.role = role;
+    }
+
+    public FavoriteList getFavoriteList() {
+        return favoriteList;
+    }
+
+    public void setFavoriteList(FavoriteList favoriteList) {
+        this.favoriteList = favoriteList;
     }
 
     @Override

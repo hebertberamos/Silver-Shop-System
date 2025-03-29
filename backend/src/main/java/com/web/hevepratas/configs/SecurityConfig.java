@@ -33,7 +33,6 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
-<<<<<<< Updated upstream
 //                        .requestMatchers("/auth/**").permitAll()
 //                        .requestMatchers("/product/all").permitAll()
 //                        .requestMatchers("/product/new").hasRole("ADMIN")
@@ -42,17 +41,7 @@ public class SecurityConfig {
 //                        .requestMatchers("/users/").hasRole("ADMIN")
 //                        .requestMatchers("/users/add/address").authenticated()
 //                        .requestMatchers("/users/me").authenticated()
-=======
-                        .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers("/product/all").permitAll()
-                        .requestMatchers("/product/new").hasRole("ADMIN")
-                        .requestMatchers("/product/get/{id}").permitAll()
-                        .requestMatchers("/product/update/{id}").hasRole("ADMIN")
-                        .requestMatchers("/users/").hasRole("ADMIN")
-                        .requestMatchers("/users/add/address").authenticated()
-                        .requestMatchers("/users/me").authenticated()
-                        .requestMatchers("/user").permitAll()
->>>>>>> Stashed changes
+//                        .requestMatchers("/user").permitAll()
                         .anyRequest().permitAll()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

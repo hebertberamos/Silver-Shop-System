@@ -51,12 +51,6 @@ public class ProductMapper {
 
         if(!entity.getImages().isEmpty()){
             for(ProductImage image : productImages){
-<<<<<<< Updated upstream
-=======
-                if(image.isMainImage()){
-                    dto.setMainImageUrl(image.getImageUrl());
-                }
->>>>>>> Stashed changes
                 dto.getImages().add(productImageMapper.fromEntityToDto(image));
             }
         }

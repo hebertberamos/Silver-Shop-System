@@ -29,6 +29,7 @@ public class UserMapper {
         entity.setEmail(dto.getEmail());
         entity.setPassword(dto.getPassword());
 
+        // To get shopping cart and address
         try {
             Optional<ShoppingCart> shoppingCartOptional = shoppingCartRepository.findById(dto.getShoppingCartId());
             ShoppingCart shoppingCartEntity = shoppingCartOptional.orElseThrow(() -> new Exception("Shopping cart id not found"));

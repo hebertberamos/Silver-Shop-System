@@ -18,11 +18,7 @@ public class ProductDTO {
     private String description;
     private Double size;
     private Integer quantityAvailable;
-//    private List<CartItemDTO> cartItems = new ArrayList<>();
-<<<<<<< Updated upstream
-=======
     private String mainImageUrl;
->>>>>>> Stashed changes
     private List<ProductImageDTO> images = new ArrayList<>();
 
 
@@ -99,13 +95,6 @@ public class ProductDTO {
         this.quantityAvailable = quantityAvailable;
     }
 
-//    public List<CartItemDTO> getCartItems() {
-//        return cartItems;
-//    }
-<<<<<<< Updated upstream
-=======
-
-
     public String getMainImageUrl() {
         return mainImageUrl;
     }
@@ -113,8 +102,6 @@ public class ProductDTO {
     public void setMainImageUrl(String mainImageUrl) {
         this.mainImageUrl = mainImageUrl;
     }
->>>>>>> Stashed changes
-
     public List<ProductImageDTO> getImages() {
         return images;
     }
