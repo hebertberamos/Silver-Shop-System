@@ -65,4 +65,9 @@ public class UserController {
         return service.addNewAddress(dto);
     }
 
+    @GetMapping(value = "/test")
+    public String ping(){
+        return "pong";
+    }
+
 }
