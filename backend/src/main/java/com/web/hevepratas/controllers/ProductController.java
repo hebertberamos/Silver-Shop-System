@@ -1,5 +1,6 @@
 package com.web.hevepratas.controllers;
 
+import com.web.hevepratas.dtos.InsertNewProductDTO;
 import com.web.hevepratas.dtos.PageDTO;
 import com.web.hevepratas.dtos.ProductDTO;
 import com.web.hevepratas.entities.enums.Gender;
@@ -11,6 +12,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/product")
@@ -34,8 +38,7 @@ public class ProductController {
     }
 
     @PostMapping(value = "/new")
-    @CrossOrigin(origins = "*", allowedHeaders = "*")
-    public ResponseEntity<String> saveNewProduct(@RequestBody ProductDTO dto){
+    public ResponseEntity<String> saveNewProduct(@RequestBody InsertNewProductDTO dto){
         return service.saveNewProduct(dto);
     }
 
@@ -47,6 +50,20 @@ public class ProductController {
     @PostMapping(value = "/update/{id}")
     public ResponseEntity<String> updateProduct(@PathVariable Long id, @RequestBody ProductDTO dto) throws Exception {
         return service.updateProduct(id, dto);
+    }
+
+    @PostMapping(value = "/add/images")
+    public ResponseEntity<String> addImagesToProduct(@RequestParam("productId") Long productId, @RequestParam("mainImage") MultipartFile mainImage, @RequestParam("images") List<MultipartFile> images) {
+        try {
+            if (productId == null) {
+                return ResponseEntity.badRequest().body("Product not specified. To do it, please chose a product.");
+            }
+
+            return service.addImageToProduct(productId, mainImage, images);
+        }
+        catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @PostMapping("/add/{productId}/to-card")

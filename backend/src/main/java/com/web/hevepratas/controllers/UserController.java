@@ -1,6 +1,7 @@
 package com.web.hevepratas.controllers;
 
 import com.web.hevepratas.dtos.AddressDTO;
+import com.web.hevepratas.dtos.InsertNewUserDTO;
 import com.web.hevepratas.dtos.UserDTO;
 import com.web.hevepratas.services.AuthenticationService;
 import com.web.hevepratas.services.UserService;
@@ -34,15 +35,15 @@ public class UserController {
         }
     }
 
-    @GetMapping(value = "/get/{email}")
-    public ResponseEntity<UserDTO> getUserByEmail(@PathVariable String email){
-        UserDTO dto = service.getUserByEmail(email);
-        if(dto == null){
-            return ResponseEntity.badRequest().build();
-        }
-
-        return ResponseEntity.ok(dto);
-    }
+//    @GetMapping(value = "/get/{email}")
+//    public ResponseEntity<UserDTO> getUserByEmail(@PathVariable String email){
+//        UserDTO dto = service.getUserByEmail(email);
+//        if(dto == null){
+//            return ResponseEntity.badRequest().build();
+//        }
+//
+//        return ResponseEntity.ok(dto);
+//    }
 
     @GetMapping(value = "/all")
     public ResponseEntity<Page<UserDTO>> findAllUser(Pageable pageable){
@@ -50,7 +51,7 @@ public class UserController {
     }
 
     @PostMapping(value = "/new")
-    public ResponseEntity<String> addNewUser(@RequestBody UserDTO dto){
+    public ResponseEntity<String> addNewUser(@RequestBody InsertNewUserDTO dto){
         return ResponseEntity.ok(service.addNewUser(dto));
     }
 

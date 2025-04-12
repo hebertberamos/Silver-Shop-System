@@ -1,6 +1,7 @@
 package com.web.hevepratas.services;
 
 import com.web.hevepratas.dtos.AddressDTO;
+import com.web.hevepratas.dtos.InsertNewUserDTO;
 import com.web.hevepratas.dtos.UserDTO;
 import com.web.hevepratas.entities.ShoppingCart;
 import com.web.hevepratas.entities.User;
@@ -34,8 +35,8 @@ public class UserService {
     }
 
 
-    public String addNewUser(UserDTO dto) {
-        User entity = userMapper.fromUserDtoToEntity(dto);
+    public String addNewUser(InsertNewUserDTO dto) {
+        User entity = userMapper.fromInsertNewUserDtoToEntity(dto);
 
         try{
             ShoppingCart shoppingCart = new ShoppingCart(entity);
@@ -68,10 +69,10 @@ public class UserService {
         return addressService.saveNewAddress(dto, userEntity);
     }
 
-    public UserDTO getUserByEmail(String email) {
-
-        User userEntity = repository.findByEmail(email);
-        return userMapper.fromEntityToDto(userEntity);
-
-    }
+//    public UserDTO getUserByEmail(String email) {
+//
+//        User userEntity = repository.findByEmail(email);
+//        return userMapper.fromEntityToDto(userEntity);
+//
+//    }
 }

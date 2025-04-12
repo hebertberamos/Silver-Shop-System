@@ -10,8 +10,8 @@ public class ProductImage {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false, name = "id")
     private Long id;
-    @Column(name = "image_url")
-    private String imageUrl;
+    @Column(name = "image_name")
+    private String imageName;
     @Column(name = "main_image")
     private boolean mainImage;
     @ManyToOne
@@ -28,12 +28,12 @@ public class ProductImage {
         this.id = id;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public String getImageName() {
+        return imageName;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setImageName(String imageUrl) {
+        this.imageName = imageUrl;
     }
 
     public boolean isMainImage() {

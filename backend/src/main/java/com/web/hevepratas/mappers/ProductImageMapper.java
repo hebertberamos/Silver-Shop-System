@@ -11,7 +11,7 @@ public class ProductImageMapper {
 
         ProductImage entity = new ProductImage();
 
-        entity.setImageUrl(dto.getImageUrl());
+        entity.setImageName(dto.getImageName());
         entity.setMainImage(dto.isMainImage());
 
         return entity;
@@ -21,7 +21,7 @@ public class ProductImageMapper {
 
         ProductImageDTO dto = new ProductImageDTO();
 
-        dto.setImageUrl(entity.getImageUrl());
+        dto.setImageName(entity.getImageName());
         dto.setMainImage(entity.isMainImage());
 
         return dto;

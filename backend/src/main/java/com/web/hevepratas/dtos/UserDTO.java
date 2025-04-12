@@ -2,7 +2,6 @@ package com.web.hevepratas.dtos;
 
 import com.web.hevepratas.entities.enums.UserRole;
 import jakarta.validation.constraints.Email;
-
 public class UserDTO {
 
     private Long id;

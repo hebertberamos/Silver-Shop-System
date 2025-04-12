@@ -1,5 +1,6 @@
 package com.web.hevepratas.services;
 
+import com.web.hevepratas.dtos.InsertNewProductDTO;
 import com.web.hevepratas.dtos.ProductDTO;
 import com.web.hevepratas.dtos.UserDTO;
 import com.web.hevepratas.entities.Product;
@@ -21,6 +22,7 @@ import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,20 +69,11 @@ public class ProductService {
         return ResponseEntity.badRequest().body(null);
     }
 
-    public ResponseEntity<String> saveNewProduct(ProductDTO dto) {
+    public ResponseEntity<String> saveNewProduct(InsertNewProductDTO dto) {
         try {
-            Product entity = mapper.fromDtoToEntity(dto);
-
-            //Get images by product dto (request body)
-            List<ProductImage> productImages = dto.getImages().stream().map(image -> productImageMapper.fromDtoToEntity(image)).collect(Collectors.toList());
-
-            for(ProductImage image : productImages){
-                image.setProduct(entity);
-                entity.getImages().add(image);
-            }
+            Product entity = mapper.fromInsertNewProductDtoToEntity(dto);
 
             repository.save(entity);
-            productImageService.saveImages(productImages);
 
             return ResponseEntity.ok("Product saved successfully");
         }
@@ -149,5 +142,9 @@ public class ProductService {
         }
 
         return ResponseEntity.ok("Product purchased");
+    }
+
+    public ResponseEntity<String> addImageToProduct(Long productId, MultipartFile mainImage, List<MultipartFile> images) throws Exception {
+        return productImageService.saveImages(mainImage, images, productId);
     }
 }

@@ -1,5 +1,6 @@
 package com.web.hevepratas.mappers;
 
+import com.web.hevepratas.dtos.InsertNewProductDTO;
 import com.web.hevepratas.dtos.ProductDTO;
 import com.web.hevepratas.dtos.ProductImageDTO;
 import com.web.hevepratas.entities.Product;
@@ -16,10 +17,9 @@ public class ProductMapper {
     @Autowired
     ProductImageMapper productImageMapper;
 
-    public Product fromDtoToEntity(ProductDTO dto){
+    public Product fromInsertNewProductDtoToEntity(InsertNewProductDTO dto){
         Product entity = new Product();
 
-        entity.setId(dto.getId());
         entity.setName(dto.getName());
         entity.setPrice(dto.getPrice());
         entity.setGender(dto.getGender());
@@ -28,8 +28,6 @@ public class ProductMapper {
         entity.setDescription(dto.getDescription());
         entity.setSize(dto.getSize());
         entity.setQuantityAvailable(dto.getQuantityAvailable());
-
-
 
         return entity;
     }
