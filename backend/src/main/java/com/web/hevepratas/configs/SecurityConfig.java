@@ -35,10 +35,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/product/new").hasRole("ADMIN")
                         .requestMatchers("/product/update/{id}").hasRole("ADMIN")
-                        .requestMatchers("/users/").hasRole("ADMIN")
+                        .requestMatchers("users/admin/**").hasRole("ADMIN")
                         .requestMatchers("/users/add/address").authenticated()
                         .requestMatchers("/users/personal-profile").authenticated()
-                        .requestMatchers("/user").permitAll()
                         .anyRequest().permitAll()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

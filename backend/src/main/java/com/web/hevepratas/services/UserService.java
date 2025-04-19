@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -20,14 +21,21 @@ public class UserService {
 
     @Autowired
     private UserRepository repository;
+
     @Autowired
     private UserMapper userMapper;
+
     @Autowired
     private ShoppingCartService shoppingCartService;
+
     @Autowired
     private AddressService addressService;
+
     @Autowired
     private AuthenticationService authenticationService;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     public ResponseEntity<Page<UserDTO>> findAll(Pageable pageable){
         Page<User> page = repository.findAllUsers(pageable);
@@ -41,6 +49,8 @@ public class UserService {
         try{
             ShoppingCart shoppingCart = new ShoppingCart(entity);
             entity.setShoppingCart(shoppingCart);
+
+            entity.setPassword(passwordEncoder.encode(entity.getPassword()));
 
             repository.save(entity);
 
