@@ -15,20 +15,34 @@ import java.util.Optional;
 @Service
 public class AddressService {
 
+
+    @Autowired
+    AuthenticationService authenticationService;
+
     @Autowired
     private AddressRepository repository;
+
     @Autowired
     private AddressMapper addressMapper;
+
     @Autowired
     private UserRepository userRepository;
 
-    public ResponseEntity<String> saveNewAddress(AddressDTO dto, User userEntity) {
-        Address addressEntity = addressMapper.fromDtoToEntity(dto);
-        addressEntity.setUser(userEntity);
+    public ResponseEntity<String> saveNewAddress(AddressDTO dto) {
+        try {
+            User userEntity  = authenticationService.authenticatedUser();
 
-        repository.save(addressEntity);
+            Address addressEntity = addressMapper.fromDtoToEntity(dto);
+            addressEntity.setUser(userEntity);
 
-        return ResponseEntity.ok("New address saved successfully");
+            repository.save(addressEntity);
+
+            return ResponseEntity.ok("New address saved successfully");
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
 }

@@ -5,13 +5,20 @@ import jakarta.validation.constraints.Email;
 public class UserDTO {
 
     private Long id;
+
     private UserRole role;
+
     private String userName;
+
     private String cpf;
+
     @Email(message = "Invalid email. \nPlease paste a valid email.")
     private String email;
+
     private String password;
+
     private Long shoppingCartId;
+
     private Long addressId;
 
 

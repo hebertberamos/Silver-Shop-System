@@ -2,9 +2,8 @@ package com.web.hevepratas.services;
 
 import com.web.hevepratas.dtos.InsertNewProductDTO;
 import com.web.hevepratas.dtos.ProductDTO;
-import com.web.hevepratas.dtos.UserDTO;
+import com.web.hevepratas.entities.Address;
 import com.web.hevepratas.entities.Product;
-import com.web.hevepratas.entities.ProductImage;
 import com.web.hevepratas.entities.User;
 import com.web.hevepratas.entities.enums.Gender;
 import com.web.hevepratas.entities.enums.ProductSubType;
@@ -12,42 +11,51 @@ import com.web.hevepratas.entities.enums.ProductType;
 import com.web.hevepratas.mappers.ProductImageMapper;
 import com.web.hevepratas.mappers.ProductMapper;
 import com.web.hevepratas.mappers.UserMapper;
+import com.web.hevepratas.repositories.AddressRepository;
 import com.web.hevepratas.repositories.ProductRepository;
 import com.web.hevepratas.repositories.ShoppingCartRepository;
 import com.web.hevepratas.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
 
     @Autowired
     private ProductRepository repository;
+
+    @Autowired
+    AddressRepository addressRepository;
+
     @Autowired
     private UserRepository userRepository;
+
     @Autowired
     private ShoppingCartRepository shoppingCartRepository;
+
     @Autowired
     private ProductMapper mapper;
+
     @Autowired
     private CartItemService cartItemService;
+
     @Autowired
     private AuthenticationService authenticationService;
+
     @Autowired
     private ProductImageService productImageService;
+
     @Autowired
     private UserMapper userMapper;
+
     @Autowired
     private ProductImageMapper productImageMapper;
 
@@ -105,8 +113,7 @@ public class ProductService {
 
     public ResponseEntity<String> addProductToCart(Long id,  int quantity) throws Exception {
 
-        UserDTO userDto = authenticationService.authenticatedUser();
-        User userEntity = userMapper.fromUserDtoToEntity(userDto);
+        User userEntity = authenticationService.authenticatedUser();
 
         Optional<Product> productOptional = repository.findById(id);
         Product productEntity = productOptional.orElseThrow(() -> new Exception("product id not found"));
@@ -118,11 +125,12 @@ public class ProductService {
     public ResponseEntity<?> processProductPurchase(int quantity, Long productId) {
         try {
             //Get the user.
-            UserDTO userDto = authenticationService.authenticatedUser();
-            User userEntity = userMapper.fromUserDtoToEntity(userDto);
+            User userEntity = authenticationService.authenticatedUser();
+
+            Address addressEntity = addressRepository.findByUser(userEntity);
 
             //Check if user already have an address instantiated for your self
-            if(userEntity.getAddress() == null) {
+            if(addressEntity == null) {
                 return ResponseEntity.status(HttpStatus.PRECONDITION_REQUIRED).body("Você precisa de um endereço para efetuar sua compra. Vamos adicionar um!");
             }
 
@@ -133,8 +141,6 @@ public class ProductService {
             //Reduce the quantity of products
             int updatedAvailableQuantity = productEntity.getQuantityAvailable() - quantity;
             productEntity.setQuantityAvailable(updatedAvailableQuantity);
-
-            //if all is good, email user about the purchase
 
         }
         catch (Exception e) {

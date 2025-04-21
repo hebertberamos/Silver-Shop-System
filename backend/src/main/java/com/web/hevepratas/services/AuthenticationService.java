@@ -6,6 +6,7 @@ import com.web.hevepratas.entities.ShoppingCart;
 import com.web.hevepratas.entities.User;
 import com.web.hevepratas.entities.enums.UserRole;
 import com.web.hevepratas.mappers.UserMapper;
+import com.web.hevepratas.repositories.ShoppingCartRepository;
 import com.web.hevepratas.repositories.UserRepository;
 import com.web.hevepratas.responses.LoginResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,12 +22,19 @@ public class AuthenticationService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    ShoppingCartRepository shoppingCartRepository;
+
     @Autowired
     private JwtService jwtService;
+
     @Autowired
     private PasswordEncoder passwordEncoder;
+
     @Autowired
     private AuthenticationManager authenticationManager;
+
     @Autowired
     private UserMapper userMapper;
 
@@ -41,14 +49,14 @@ public class AuthenticationService {
                 userEntity.setRole(UserRole.USER);
 
                 ShoppingCart shoppingCart = new ShoppingCart(userEntity);
-                userEntity.setShoppingCart(shoppingCart);
 
-                userRepository.save(userEntity);
+                shoppingCartRepository.save(shoppingCart);
 
                 return "Well done, the register was done successfully!";
             }
             catch(Exception e){
                 System.out.println("LOG - Error trying to save new user");
+                e.printStackTrace();
                 return "Something went wrong to register the new user";
             }
         }
@@ -57,9 +65,9 @@ public class AuthenticationService {
     }
 
     public LoginResponse login(LoginDTO dto){
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(dto.getEmail(),dto.getPassword()));
+        Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(dto.getEmail(),dto.getPassword()));
 
-        User userAuthenticated = userRepository.findByEmail(dto.getEmail());
+        User userAuthenticated = (User) auth.getPrincipal();
 
         String token = jwtService.generateToken(userAuthenticated);
 
@@ -70,15 +78,14 @@ public class AuthenticationService {
         return loginResponse;
     }
 
-    public UserDTO authenticatedUser(){
+    public User authenticatedUser(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User currentUser = (User) authentication.getPrincipal();
-        return userMapper.fromEntityToDto(currentUser);
+        return (User) authentication.getPrincipal();
 
     }
 
     public void validateSelfOrAdmin(String email){
-        User user = userMapper.fromUserDtoToEntity(authenticatedUser());
+        User user = authenticatedUser();
 
         if(!user.getEmail().equals(email) || user.getRole() != UserRole.ADMIN){
             System.out.println("Access denied"); // this guy will be changed to a personal Exception. MODIFY
@@ -94,12 +101,4 @@ public class AuthenticationService {
 
         return false;
     }
-
-//    public void validateSelfOrAdmin(String email){
-//        User user = userMapper.fromUserDtoToEntity(authenticatedUser());
-//
-//        if(!user.getEmail().equals(email) || user.getRole() != UserRole.ADMIN){
-//            System.out.println("Access denied"); // this guy will be changed to a personal Exception. MODIFY
-//        }
-//    }
 }

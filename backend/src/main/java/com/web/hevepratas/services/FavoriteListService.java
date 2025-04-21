@@ -1,6 +1,5 @@
 package com.web.hevepratas.services;
 
-import com.web.hevepratas.dtos.UserDTO;
 import com.web.hevepratas.entities.FavoriteList;
 import com.web.hevepratas.entities.Product;
 import com.web.hevepratas.entities.User;
@@ -27,18 +26,23 @@ public class FavoriteListService {
 
 
     public ResponseEntity<?> favoriteProduct(Long productId) throws Exception {
-        UserDTO userDto = authenticationService.authenticatedUser();
-        User userEntity = userMapper.fromUserDtoToEntity(userDto);
+        try {
+            User userEntity = authenticationService.authenticatedUser();
 
-        Optional<Product> optionalProduct = productRepository.findById(productId);
-        Product productEntity = optionalProduct.orElseThrow(() -> new Exception("Error to find product with id " + productId));
+            Optional<Product> optionalProduct = productRepository.findById(productId);
+            Product productEntity = optionalProduct.orElseThrow(() -> new Exception("Error to find product with id " + productId));
 
-        FavoriteList favoriteList = new FavoriteList();
-        favoriteList.setUser(userEntity);
-        favoriteList.getFavoriteProducts().add(productEntity);
+            FavoriteList favoriteList = new FavoriteList();
+            favoriteList.setUser(userEntity);
+            favoriteList.getFavoriteProducts().add(productEntity);
 
-        repository.save(favoriteList);
+            repository.save(favoriteList);
 
-        return ResponseEntity.ok("Produto adicionado a favoritos!");
+            return ResponseEntity.ok("Produto adicionado a favoritos!");
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
     }
 }

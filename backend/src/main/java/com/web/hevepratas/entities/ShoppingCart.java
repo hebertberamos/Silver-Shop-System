@@ -1,6 +1,7 @@
 package com.web.hevepratas.entities;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.Cascade;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +15,8 @@ public class ShoppingCart {
     @Column(nullable = false, name = "id")
     private Long id;
 
-    @OneToOne(mappedBy = "shoppingCart")
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, optional = false)
+    @JoinColumn(name = "user_id")
     private User user;
 
     @OneToMany(mappedBy = "shoppingCart", cascade = CascadeType.ALL)

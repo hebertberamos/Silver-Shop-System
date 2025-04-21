@@ -1,6 +1,5 @@
 package com.web.hevepratas.controllers;
 
-import com.web.hevepratas.repositories.FavoriteListRepository;
 import com.web.hevepratas.services.FavoriteListService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

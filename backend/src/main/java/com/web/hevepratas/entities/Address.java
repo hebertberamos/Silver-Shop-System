@@ -9,18 +9,24 @@ public class Address {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false, name = "id")
     private Long id;
+
     @Column(name = "user_city")
     private String city;
+
     @Column(name = "user_address")
     private String address;
+
     @Column(name = "user_cep")
     private String cep;
+
     @Column(name = "user_address_complement")
     private String complement;
+
     @Column(name = "user_house_number")
     private int houseNumber;
-    @OneToOne
-    @JoinColumn(name = "user_id", nullable = false)
+
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id")
     private User user;
 
 

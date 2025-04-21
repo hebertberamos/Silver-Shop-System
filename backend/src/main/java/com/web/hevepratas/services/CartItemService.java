@@ -29,12 +29,16 @@ public class CartItemService {
 
     public ResponseEntity<String> saveCartItem(Product productEntity, User userEntity, int quantity) throws Exception {
 
+        ShoppingCart shoppingCartEntity = shoppingCartRepository.findByUser(userEntity);
+
         //catch the cart item that have the product id and shopping cart id as the ones was passed.
-        CartItem cartItemEntity = repository.findByProductIdAndShoppingCartId(productEntity.getId(), userEntity.getShoppingCart().getId());
+//        CartItem cartItemEntity = repository.findByProductIdAndShoppingCartId(productEntity.getId(), userEntity.getShoppingCart().getId());
+        CartItem cartItemEntity = repository.findByProductIdAndShoppingCartId(productEntity.getId(), shoppingCartEntity.getId());
+
 
         if(cartItemEntity == null){
             cartItemEntity = new CartItem();
-            Optional<ShoppingCart> cartOptional = shoppingCartRepository.findById(userEntity.getShoppingCart().getId());
+            Optional<ShoppingCart> cartOptional = shoppingCartRepository.findById(shoppingCartEntity.getId());
             ShoppingCart cartEntity = cartOptional.orElseThrow(() -> new Exception("Shopping cart id not found!"));
 
             cartItemEntity.setShoppingCart(cartEntity);

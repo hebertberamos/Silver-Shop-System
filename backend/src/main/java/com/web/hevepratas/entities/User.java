@@ -21,26 +21,23 @@ public class User implements UserDetails, Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false, name = "id")
     private Long id;
+
     @Column(name = "user_role")
     @Enumerated(EnumType.STRING)
     private UserRole role;
+
     @Column(name = "user_name")
     private String userName;
+
     @Column(name = "CPF", unique = true)
     private String cpf;
+
     @Column(name = "user_email", unique = true)
     @Email(regexp = "[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,3}", flags = Pattern.Flag.CASE_INSENSITIVE)
     private String email;
+
     @Column(name = "user_password")
     private String password;
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "shoppingCart_id")
-    private ShoppingCart shoppingCart;
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Address address;
-
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private FavoriteList favoriteList;
 
 
 
@@ -84,22 +81,6 @@ public class User implements UserDetails, Serializable {
         this.password = password;
     }
 
-    public ShoppingCart getShoppingCart() {
-        return shoppingCart;
-    }
-
-    public void setShoppingCart(ShoppingCart shoppingCart) {
-        this.shoppingCart = shoppingCart;
-    }
-
-    public Address getAddress() {
-        return address;
-    }
-
-    public void setAddress(Address address) {
-        this.address = address;
-    }
-
     public UserRole getRole() {
         return role;
     }
@@ -108,13 +89,6 @@ public class User implements UserDetails, Serializable {
         this.role = role;
     }
 
-    public FavoriteList getFavoriteList() {
-        return favoriteList;
-    }
-
-    public void setFavoriteList(FavoriteList favoriteList) {
-        this.favoriteList = favoriteList;
-    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

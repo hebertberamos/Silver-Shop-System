@@ -1,11 +1,11 @@
 package com.web.hevepratas.services;
 
-import com.web.hevepratas.dtos.AddressDTO;
 import com.web.hevepratas.dtos.InsertNewUserDTO;
 import com.web.hevepratas.dtos.UserDTO;
 import com.web.hevepratas.entities.ShoppingCart;
 import com.web.hevepratas.entities.User;
 import com.web.hevepratas.mappers.UserMapper;
+import com.web.hevepratas.repositories.ShoppingCartRepository;
 import com.web.hevepratas.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -21,6 +21,9 @@ public class UserService {
 
     @Autowired
     private UserRepository repository;
+
+    @Autowired
+    ShoppingCartRepository shoppingCartRepository;
 
     @Autowired
     private UserMapper userMapper;
@@ -48,11 +51,10 @@ public class UserService {
 
         try{
             ShoppingCart shoppingCart = new ShoppingCart(entity);
-            entity.setShoppingCart(shoppingCart);
 
             entity.setPassword(passwordEncoder.encode(entity.getPassword()));
 
-            repository.save(entity);
+            shoppingCartRepository.save(shoppingCart);
 
             return "New user saved";
         }
@@ -63,26 +65,28 @@ public class UserService {
 
     public ResponseEntity<String> deleteUser(Long id) {
         try{
-            repository.deleteById(id);
+
+            Optional<User> optional = repository.findById(id);
+            User entity = optional.orElseThrow();
+            ShoppingCart shoppingCartEntity = shoppingCartRepository.findByUser(entity);
+
+            // Shopping cart already deletes user that is related because of CascadeType.ALL
+            shoppingCartRepository.deleteById(shoppingCartEntity.getId());
+
             return ResponseEntity.ok("User deleted");
         }
         catch (Exception e){
+            e.printStackTrace();
             return ResponseEntity.badRequest().body("Error while deleting user");
         }
     }
 
-    public ResponseEntity<String> addNewAddress( AddressDTO dto) throws Exception {
+    public UserDTO personalProfile() {
 
-        UserDTO userDto = authenticationService.authenticatedUser();
-        User userEntity = userMapper.fromUserDtoToEntity(userDto);
+        User currentUser = authenticationService.authenticatedUser();
+        authenticationService.validateSelfOrAdmin(currentUser.getEmail());
 
-        return addressService.saveNewAddress(dto, userEntity);
+        return userMapper.fromEntityToDto(currentUser);
     }
 
-//    public UserDTO getUserByEmail(String email) {
-//
-//        User userEntity = repository.findByEmail(email);
-//        return userMapper.fromEntityToDto(userEntity);
-//
-//    }
 }

@@ -20,7 +20,7 @@ import java.util.Optional;
 @Service
 public class ProductImageService {
 
-    private final String filesSavePath = "C:/Users/frsilva/Personnel/projects/hevapratas_images_repository";
+    private final String filesSavePath = "C:/Users/frsilva/Personnel/projects/heva_pratas_resources/hevapratas_images_repository";
 
     @Autowired
     private ProductImageRepository repository;
