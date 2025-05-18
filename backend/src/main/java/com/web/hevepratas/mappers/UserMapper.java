@@ -2,7 +2,6 @@ package com.web.hevepratas.mappers;
 
 import com.web.hevepratas.dtos.InsertNewUserDTO;
 import com.web.hevepratas.dtos.UserDTO;
-import com.web.hevepratas.entities.ShoppingCart;
 import com.web.hevepratas.entities.User;
 import com.web.hevepratas.entities.enums.UserRole;
 import com.web.hevepratas.repositories.AddressRepository;
@@ -50,14 +49,14 @@ public class UserMapper {
         entity.setEmail(dto.getEmail());
         entity.setPassword(dto.getPassword());
 
-        switch (dto.getRoleNumber()) {
-            case 0:
+        switch (dto.getRole()) {
+            case "ADMIN":
                 entity.setRole(UserRole.ADMIN);
                 break;
-            case 1:
+            case "MEMBER":
                 entity.setRole(UserRole.MEMBER);
                 break;
-            case 2:
+            case "USER":
                 entity.setRole(UserRole.USER);
                 break;
         }

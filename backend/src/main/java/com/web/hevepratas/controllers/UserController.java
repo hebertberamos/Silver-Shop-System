@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/user/personal")
+@RequestMapping("/personal")
 public class UserController {
 
     @Autowired
@@ -36,9 +36,10 @@ public class UserController {
     }
 
     //This guy will be implemented using the jwt to get the user, so the {userId} will not be passed because the application will know the user by the token.
-    @PostMapping(value = "/add/address")
+    @PostMapping(value = "/address")
     public ResponseEntity<String> addNewAddress(@RequestBody AddressDTO dto) throws Exception {
         return addressService.saveNewAddress(dto);
     }
 
+    // method to buy product may need to be added here
 }

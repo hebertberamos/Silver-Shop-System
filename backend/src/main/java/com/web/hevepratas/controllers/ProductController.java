@@ -17,14 +17,14 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @RestController
-@RequestMapping("/product")
+@RequestMapping("/products")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class ProductController {
 
     @Autowired
     private ProductService service;
 
-    @GetMapping(value = "/all")
+    @GetMapping()
     public ResponseEntity<PageDTO<ProductDTO>> allProducts(
             @RequestParam (value = "type", required = false) ProductType type,
             @RequestParam (value = "sub_type", required = false) ProductSubType subType,
@@ -37,22 +37,22 @@ public class ProductController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping(value = "/new")
+    @PostMapping()
     public ResponseEntity<String> saveNewProduct(@RequestBody InsertNewProductDTO dto){
         return service.saveNewProduct(dto);
     }
 
-    @GetMapping("/get/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<ProductDTO> findById(@PathVariable Long id) throws Exception {
         return service.findById(id);
     }
 
-    @PostMapping(value = "/update/{id}")
+    @PostMapping(value = "/{id}")
     public ResponseEntity<String> updateProduct(@PathVariable Long id, @RequestBody ProductDTO dto) throws Exception {
         return service.updateProduct(id, dto);
     }
 
-    @PostMapping(value = "/add/images")
+    @PostMapping(value = "/images")
     public ResponseEntity<String> addImagesToProduct(@RequestParam("productId") Long productId, @RequestParam("mainImage") MultipartFile mainImage, @RequestParam("images") List<MultipartFile> images) {
         try {
             if (productId == null) {
@@ -66,7 +66,7 @@ public class ProductController {
         }
     }
 
-    @PostMapping("/add/{productId}/to-card")
+    @PostMapping("/{productId}/card")
     public ResponseEntity<String> addProductToCart(
             @PathVariable Long productId,
             @RequestParam (required = true, defaultValue = "1") int quantity

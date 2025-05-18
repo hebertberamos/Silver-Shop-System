@@ -8,26 +8,36 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.net.URI;
 
 @RestController
-@RequestMapping(value = "users/admin")
-public class UserAdminController {
+@RequestMapping(value = "/admin")
+public class UserAdminController implements GenericController{
 
     @Autowired
     UserService service;
 
 
-    @GetMapping(value = "/all")
+    @GetMapping(value = "/users")
     public ResponseEntity<Page<UserDTO>> findAllUser(Pageable pageable){
         return service.findAll(pageable);
     }
 
-    @PostMapping(value = "/new")
-    public ResponseEntity<String> addNewUser(@RequestBody InsertNewUserDTO dto){
-        return ResponseEntity.ok(service.addNewUser(dto));
+    @PostMapping(value = "/user")
+    public ResponseEntity<Object> addNewUser(@RequestBody InsertNewUserDTO dto){
+        InsertNewUserDTO userDto = service.addNewUser(dto);
+
+        if(userDto != null){
+            URI location = generateResponse(userDto.getId());
+            return ResponseEntity.created(location).body(userDto);
+        }
+
+        return ResponseEntity.badRequest().build();
     }
 
-    @DeleteMapping(value = "/delete/{id}")
+    @DeleteMapping(value = "/user/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable Long id){
         return service.deleteUser(id);
     }

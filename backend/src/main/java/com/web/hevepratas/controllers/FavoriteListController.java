@@ -12,7 +12,7 @@ public class FavoriteListController {
     @Autowired
     private FavoriteListService service;
 
-    @PostMapping("/favorite/{productId}")
+    @PostMapping("/{productId}")
     public ResponseEntity<?> favoriteProduct(@PathVariable Long productId) throws Exception {
         return service.favoriteProduct(productId);
     }

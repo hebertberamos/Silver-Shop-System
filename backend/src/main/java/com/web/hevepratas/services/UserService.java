@@ -46,7 +46,7 @@ public class UserService {
     }
 
 
-    public String addNewUser(InsertNewUserDTO dto) {
+    public InsertNewUserDTO addNewUser(InsertNewUserDTO dto) {
         User entity = userMapper.fromInsertNewUserDtoToEntity(dto);
 
         try{
@@ -56,10 +56,11 @@ public class UserService {
 
             shoppingCartRepository.save(shoppingCart);
 
-            return "New user saved";
+            return new InsertNewUserDTO(entity);
         }
         catch(Exception e){
-            return "Error to save user. \n" + e;
+            e.printStackTrace();
+            return null;
         }
     }
 
