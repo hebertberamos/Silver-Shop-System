@@ -1,17 +1,22 @@
 package com.web.hevepratas.controllers;
 
 import com.web.hevepratas.dtos.AddressDTO;
+import com.web.hevepratas.dtos.InsertNewUserDTO;
 import com.web.hevepratas.dtos.UserDTO;
 import com.web.hevepratas.services.AddressService;
 import com.web.hevepratas.services.AuthenticationService;
 import com.web.hevepratas.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
+
 @RestController
-@RequestMapping("/personal")
-public class UserController {
+@RequestMapping("/users")
+public class UserController implements GenericController{
 
     @Autowired
     private UserService service;
@@ -21,7 +26,31 @@ public class UserController {
 
     @Autowired
     AddressService addressService;
-    //just to test
+
+
+    @GetMapping
+    public ResponseEntity<Page<UserDTO>> findAllUser(Pageable pageable){
+        return service.findAll(pageable);
+    }
+
+    @PostMapping
+    public ResponseEntity<Object> addNewUser(@RequestBody InsertNewUserDTO dto){
+        InsertNewUserDTO userDto = service.addNewUser(dto);
+
+        if(userDto != null){
+            URI location = generateResponse(userDto.getId());
+            return ResponseEntity.created(location).body(userDto);
+        }
+
+        return ResponseEntity.badRequest().build();
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<String> deleteUser(@PathVariable Long id){
+        return service.deleteUser(id);
+    }
+
+
     @GetMapping(value = "/profile")
     public ResponseEntity<UserDTO> authenticatedUser(){
         try {
@@ -40,6 +69,4 @@ public class UserController {
     public ResponseEntity<String> addNewAddress(@RequestBody AddressDTO dto) throws Exception {
         return addressService.saveNewAddress(dto);
     }
-
-    // method to buy product may need to be added here
 }
