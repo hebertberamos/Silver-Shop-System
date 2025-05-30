@@ -16,6 +16,7 @@ public class UserDTO {
     private String userEmail;
     private String userPassword;
     private UserRole userRole;
+    private AddressDTO address;
 
     public UserDTO() {}
 
@@ -25,5 +26,9 @@ public class UserDTO {
         this.userEmail = user.getUserEmail();
         this.userPassword = user.getUserPassword();
         this.userRole = user.getUserRole();
+
+        if(user.getAddress() != null) {
+            this.address = new AddressDTO(user.getAddress());
+        }
     }
 }

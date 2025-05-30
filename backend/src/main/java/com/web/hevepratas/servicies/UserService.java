@@ -3,11 +3,10 @@ package com.web.hevepratas.servicies;
 import com.web.hevepratas.dtos.UserDTO;
 import com.web.hevepratas.entities.User;
 import com.web.hevepratas.exceptions.ResourceNotFoundException;
-import com.web.hevepratas.mappers.UserMapper;
+import com.web.hevepratas.mappers.GlobalMapper;
 import com.web.hevepratas.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -20,7 +19,7 @@ public class UserService {
     private final UserRepository repository;
 
     public UserDTO save(UserDTO userDTO) {
-        User entity = UserMapper.mapToUser(userDTO);
+        User entity = GlobalMapper.mapToUser(userDTO);
         return new UserDTO(repository.save(entity));
     }
 

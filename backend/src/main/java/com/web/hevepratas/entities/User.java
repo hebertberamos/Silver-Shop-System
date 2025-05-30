@@ -3,6 +3,7 @@ package com.web.hevepratas.entities;
 import com.web.hevepratas.enums.UserRole;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -36,4 +37,14 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Column(name = "user_role", nullable = false)
     private UserRole userRole;
+
+    @Setter(AccessLevel.NONE)
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, optional = false)
+    private Address address;
+
+
+    public void setAddress(Address address) {
+        this.address = address;
+        address.setUser(this);
+    }
 }

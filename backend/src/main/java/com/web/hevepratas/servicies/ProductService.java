@@ -1,11 +1,9 @@
 package com.web.hevepratas.servicies;
 
 import com.web.hevepratas.dtos.ProductDTO;
-import com.web.hevepratas.dtos.ProductDTO;
 import com.web.hevepratas.entities.Product;
-import com.web.hevepratas.entities.User;
 import com.web.hevepratas.exceptions.ResourceNotFoundException;
-import com.web.hevepratas.mappers.ProductMapper;
+import com.web.hevepratas.mappers.GlobalMapper;
 import com.web.hevepratas.repositories.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,7 +19,7 @@ public class ProductService {
     private final ProductRepository repository;
 
     public ProductDTO save(ProductDTO dtoBody) {
-        Product productEntity = ProductMapper.mapToProduct(dtoBody);
+        Product productEntity = GlobalMapper.mapToProduct(dtoBody);
         return new ProductDTO(repository.save(productEntity));
     }
 
