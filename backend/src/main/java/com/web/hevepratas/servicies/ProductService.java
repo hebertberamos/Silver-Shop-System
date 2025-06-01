@@ -2,14 +2,18 @@ package com.web.hevepratas.servicies;
 
 import com.web.hevepratas.dtos.ProductDTO;
 import com.web.hevepratas.entities.Product;
+import com.web.hevepratas.entities.ProductImage;
 import com.web.hevepratas.exceptions.ResourceNotFoundException;
 import com.web.hevepratas.mappers.GlobalMapper;
+import com.web.hevepratas.repositories.ProductImageRepository;
 import com.web.hevepratas.repositories.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -18,8 +22,21 @@ public class ProductService {
 
     private final ProductRepository repository;
 
-    public ProductDTO save(ProductDTO dtoBody) {
-        Product productEntity = GlobalMapper.mapToProduct(dtoBody);
+    private final ProductImageService imageService;
+
+    public ProductDTO save(ProductDTO dtoBody, MultipartFile mainImage, List<MultipartFile> images) {
+        Product productEntity = new Product();
+        productEntity = GlobalMapper.mapToProduct(dtoBody);
+
+        List<ProductImage> productImages = imageService.saveImages(mainImage, images, productEntity);
+
+
+        if(!productImages.isEmpty()) {
+            for(ProductImage img : productImages) {
+                productEntity.getImages().add(img);
+            }
+        }
+
         return new ProductDTO(repository.save(productEntity));
     }
 

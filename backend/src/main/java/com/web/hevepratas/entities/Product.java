@@ -5,11 +5,14 @@ import com.web.hevepratas.enums.ProductSubType;
 import com.web.hevepratas.enums.ProductType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
@@ -53,4 +56,8 @@ public class Product {
     @NotBlank(message = "Descrição obrigatória")
     @Column(name = "product_description")
     private String productDescription;
+
+    @Setter(AccessLevel.NONE)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProductImage> images = new ArrayList<>();
 }

@@ -1,16 +1,18 @@
 package com.web.hevepratas.controllers;
 
 import com.web.hevepratas.dtos.ProductDTO;
-import com.web.hevepratas.dtos.UserDTO;
 import com.web.hevepratas.servicies.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.Collection;
+import java.util.List;
 
 @RestController
 @RequestMapping("products")
@@ -19,9 +21,9 @@ public class ProductController {
 
     private final ProductService service;
 
-    @PostMapping
-    public ResponseEntity<?> save(@RequestBody ProductDTO body) {
-        body = service.save(body);
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> save(@RequestPart("body") ProductDTO body, @RequestPart("mainImage") MultipartFile mainImage, @RequestPart("images") List<MultipartFile> images) {
+        body = service.save(body, mainImage, images);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
