@@ -3,8 +3,12 @@ package com.web.hevepratas.controllers;
 import com.web.hevepratas.dtos.UserDTO;
 import com.web.hevepratas.servicies.UserService;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.http.parser.Authorization;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -36,24 +40,29 @@ public class UserController {
     }
 
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Collection<UserDTO>> all(){
         Collection<UserDTO> collection = service.allUsers();
         return ResponseEntity.ok(collection);
     }
 
     @GetMapping("{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> findById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(service.findById(id));
     }
 
     @DeleteMapping("{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> delete(@PathVariable("id") Long id) {
         return ResponseEntity.ok(service.delete(id));
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<?> update(@PathVariable("id") Long id, @RequestBody UserDTO dtoBody) {
-        return ResponseEntity.ok(service.update(id, dtoBody));
+    public ResponseEntity<?> update(@PathVariable("id") Long id, @RequestBody UserDTO dtoBody, Authentication authentication) {
+        UserDetails loggedUser = (UserDetails) authentication.getPrincipal();
+
+        return ResponseEntity.ok(service.update(id, dtoBody, authentication));
     }
 
 }
