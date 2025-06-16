@@ -25,6 +25,9 @@ public class ProductController {
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> save(@RequestPart("body") ProductDTO body, @RequestPart("mainImage") MultipartFile mainImage, @RequestPart("images") List<MultipartFile> images) {
+
+        ResponseEntity<String> returnResponse = null;
+ 
         body = service.save(body, mainImage, images);
 
         URI location = ServletUriComponentsBuilder
@@ -33,11 +36,13 @@ public class ProductController {
                 .buildAndExpand(body.getId())
                 .toUri();
 
-        if(body != null) {
-            return ResponseEntity.created(location).build();
+        if(body == null) {
+            returnResponse = new ResponseEntity("Não foi possível salvar o produto. Verifique as informações e tente novamente.", HttpStatus.BAD_REQUEST);
         }
 
-        return new ResponseEntity("Não foi possível salvar o produto. Verifique as informações e tente novamente.", HttpStatus.BAD_REQUEST);
+        returnResponse = ResponseEntity.created(location).build();
+
+        return returnResponse;
     }
 
     @GetMapping

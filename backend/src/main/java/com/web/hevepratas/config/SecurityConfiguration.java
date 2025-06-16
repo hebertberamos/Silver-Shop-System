@@ -1,7 +1,7 @@
 package com.web.hevepratas.config;
 
-import ch.qos.logback.core.joran.spi.HttpUtil;
 import com.web.hevepratas.security.CustomUserDetailsService;
+import com.web.hevepratas.security.LoginSocialSuccessHandler;
 import com.web.hevepratas.servicies.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,16 +22,19 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfiguration {
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, LoginSocialSuccessHandler successHandler) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
-//                .formLogin(configurer -> configurer.loginPage("/login.htl").successForwardUrl("/home.html"))
+//                .formLogin(configurer -> configurer.loginPage("/login.html").successForwardUrl("/home.html"))
                 .formLogin(Customizer.withDefaults()) // Forma do usuário se autenticar (de usuários)
                 .httpBasic(Customizer.withDefaults()) // Forma do usuário se autenticar (de aplicação para aplicação)
                 .authorizeHttpRequests(authorize -> {
 //                    authorize.requestMatchers(HttpMethod.POST, "users/**").permitAll();
                     authorize.requestMatchers(HttpMethod.GET, "products/**").permitAll();
                     authorize.anyRequest().authenticated();
+                })
+                .oauth2Login(oauth2 -> {
+                    oauth2.successHandler(successHandler);
                 })
                 .build();
     }
@@ -41,7 +44,7 @@ public class SecurityConfiguration {
         return new BCryptPasswordEncoder(10);
     }
 
-    @Bean
+//    @Bean
     public UserDetailsService userDetailsService(UserService userService) {
         return new CustomUserDetailsService(userService);
     }

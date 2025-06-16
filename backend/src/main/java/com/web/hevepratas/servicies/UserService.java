@@ -21,7 +21,7 @@ public class UserService {
 
     private final UserRepository repository;
     private final PasswordEncoder encoder;
-
+ 
     public UserDTO save(UserDTO userDTO) {
         User entity = GlobalMapper.mapToUser(userDTO);
         entity.setUserPassword(encoder.encode(entity.getUserPassword()));
@@ -85,5 +85,26 @@ public class UserService {
 
     public User findByEmail(String email) {
         return repository.findByUserEmail(email);
+    }
+
+    public User saveByUserEntity(UserDTO dto) {
+        User entity = null;
+
+        try {
+            if (dto != null) {
+                entity = new User();
+
+                entity.setUserName(dto.getUserName());
+                entity.setUserEmail(dto.getUserEmail());
+                entity.setUserPassword(encoder.encode(dto.getUserPassword()));
+                entity.setUserRole(dto.getUserRole());
+
+                entity = repository.save(entity);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        return entity;
     }
 }

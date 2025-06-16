@@ -5,7 +5,6 @@ import com.web.hevepratas.entities.Product;
 import com.web.hevepratas.entities.ProductImage;
 import com.web.hevepratas.exceptions.ResourceNotFoundException;
 import com.web.hevepratas.repositories.ProductImageRepository;
-import com.web.hevepratas.repositories.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -18,7 +17,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,7 +24,6 @@ import java.util.stream.Collectors;
 public class ProductImageService {
 
     private final ProductImageRepository repository;
-    private final ProductRepository productRepository;
 
     @Value("${product.image.path}")
     private String fileSavePath;

@@ -1,6 +1,7 @@
 package com.web.hevepratas.exceptions.configs;
 
 import com.web.hevepratas.exceptions.ResourceNotFoundException;
+import com.web.hevepratas.exceptions.LoginNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,16 @@ public class ResourceExceptionHandler {
         err.setPath(request.getRequestURI());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(err);
 
+    }
+
+    @ExceptionHandler(LoginNotFoundException.class)
+    public ResponseEntity<StandardError> userNotFound(LoginNotFoundException ex, HttpServletRequest request) {
+        StandardError err = new StandardError();
+        err.setTimestamp(Instant.now());
+        err.setStatus(HttpStatus.NOT_FOUND.value());
+        err.setError("Login ou senha incorreto...");
+        err.setPath(request.getRequestURI());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(err);
     }
 
 }

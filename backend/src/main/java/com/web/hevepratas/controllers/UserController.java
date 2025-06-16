@@ -3,7 +3,6 @@ package com.web.hevepratas.controllers;
 import com.web.hevepratas.dtos.UserDTO;
 import com.web.hevepratas.servicies.UserService;
 import lombok.RequiredArgsConstructor;
-import org.apache.tomcat.util.http.parser.Authorization;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
