@@ -1,8 +1,6 @@
 package com.web.hevepratas.config;
 
-import com.web.hevepratas.security.CustomUserDetailsService;
 import com.web.hevepratas.security.LoginSocialSuccessHandler;
-import com.web.hevepratas.servicies.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -11,9 +9,8 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
+import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -25,28 +22,30 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http, LoginSocialSuccessHandler successHandler) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
-//                .formLogin(configurer -> configurer.loginPage("/login.html").successForwardUrl("/home.html"))
-                .formLogin(Customizer.withDefaults()) // Forma do usuário se autenticar (de usuários)
-                .httpBasic(Customizer.withDefaults()) // Forma do usuário se autenticar (de aplicação para aplicação)
+                .formLogin(configurer -> {
+                    configurer.loginPage("/login").permitAll();
+                })
                 .authorizeHttpRequests(authorize -> {
-//                    authorize.requestMatchers(HttpMethod.POST, "users/**").permitAll();
                     authorize.requestMatchers(HttpMethod.GET, "products/**").permitAll();
                     authorize.anyRequest().authenticated();
                 })
                 .oauth2Login(oauth2 -> {
-                    oauth2.successHandler(successHandler);
+                    oauth2
+                            .loginPage("/login")
+                            .successHandler(successHandler);
                 })
+                .oauth2ResourceServer(oauth2RS -> oauth2RS.jwt(Customizer.withDefaults()))
                 .build();
     }
 
     @Bean
-    public PasswordEncoder encoder(){
-        return new BCryptPasswordEncoder(10);
-    }
+    public JwtAuthenticationConverter jwtAuthenticationConverter() {
+        var authoritiesConverter = new JwtGrantedAuthoritiesConverter();
+        authoritiesConverter.setAuthorityPrefix("ROLE_");
 
-//    @Bean
-    public UserDetailsService userDetailsService(UserService userService) {
-        return new CustomUserDetailsService(userService);
-    }
+        var converter = new JwtAuthenticationConverter();
+        converter.setJwtGrantedAuthoritiesConverter(authoritiesConverter);
 
+        return converter;
+    }
 }
