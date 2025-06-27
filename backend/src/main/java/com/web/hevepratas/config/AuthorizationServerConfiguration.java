@@ -16,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
+import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
 import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
 import org.springframework.security.oauth2.server.authorization.settings.OAuth2TokenFormat;
 import org.springframework.security.oauth2.server.authorization.settings.TokenSettings;
@@ -60,7 +61,8 @@ public class AuthorizationServerConfiguration {
     public TokenSettings tokenSettings() {
         return TokenSettings.builder()
                 .accessTokenFormat(OAuth2TokenFormat.SELF_CONTAINED)
-                .accessTokenTimeToLive(Duration.ofHours(5))
+                .accessTokenTimeToLive(Duration.ofHours(2))
+                .refreshTokenTimeToLive(Duration.ofHours(4))
                 .build();
     }
 
@@ -97,5 +99,25 @@ public class AuthorizationServerConfiguration {
     @Bean
     public JwtDecoder jwtDecoder(JWKSource<SecurityContext> jwkSource) {
         return OAuth2AuthorizationServerConfiguration.jwtDecoder(jwkSource);
+    }
+
+    @Bean
+    public AuthorizationServerSettings authorizationServerSettings() {
+        return AuthorizationServerSettings.builder()
+                // to obtain the token
+                .tokenEndpoint("/oauth2/token")
+                // to consult token status
+                .tokenIntrospectionEndpoint("/oauth2/introspect")
+                // to revoke the token
+                .tokenRevocationEndpoint("/oauth2/revoke")
+                // Authorization endpoint
+                .authorizationEndpoint("/oauth2/authorize")
+                // User information OPEN ID CONNECT
+                .oidcUserInfoEndpoint("/oauth2/userinfo")
+                // Obtain public key to verify token signature
+                .jwkSetEndpoint("/oauth2/jwks")
+                // Logout
+                .oidcLogoutEndpoint("/oauth2/logout")
+                .build();
     }
 }
