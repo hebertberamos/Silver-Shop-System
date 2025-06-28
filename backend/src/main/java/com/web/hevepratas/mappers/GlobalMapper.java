@@ -14,6 +14,7 @@ public class GlobalMapper {
     public static User mapToUser(UserDTO dto) {
         User entity =  new User();
 
+        entity.setId(dto.getId());
         entity.setUserName(dto.getUserName());
         entity.setUserEmail(dto.getUserEmail());
         entity.setUserPassword(dto.getUserPassword());

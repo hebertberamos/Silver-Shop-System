@@ -4,6 +4,7 @@ import com.web.hevepratas.dtos.AddressDTO;
 import com.web.hevepratas.servicies.AddressService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -19,8 +20,8 @@ public class AddressController {
     }
 
     @PutMapping("{userId}")
-    public ResponseEntity<?> update(@PathVariable("userId") Long userId, @RequestBody AddressDTO dtoBody) {
-        return ResponseEntity.ok(service.update(userId, dtoBody));
+    public ResponseEntity<String> update(@PathVariable("userId") Long userId, @RequestBody AddressDTO dtoBody, Authentication authentication) {
+        return ResponseEntity.ok(service.update(userId, dtoBody, authentication));
     }
 
 }
