@@ -2,6 +2,8 @@ package com.web.hevepratas.servicies;
 
 import com.web.hevepratas.dtos.UserDTO;
 import com.web.hevepratas.entities.User;
+import com.web.hevepratas.enums.UserRole;
+import com.web.hevepratas.exceptions.AuthorizationException;
 import com.web.hevepratas.exceptions.ResourceNotFoundException;
 import com.web.hevepratas.mappers.GlobalMapper;
 import com.web.hevepratas.repositories.UserRepository;
@@ -54,33 +56,25 @@ public class UserService {
     }
 
     public UserDTO update(Long id, UserDTO dtoBody, Authentication authentication) {
-        User userObject = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Usuário com id " + id + " não encontrado"));
+       User updatedUser = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Usuário com id " + id + " não encontrado"));
 
-        System.out.println(userObject.getUserEmail());
-        System.out.println(authentication.getName());
+        User authenticatedUser = (User) authentication.getPrincipal();
 
-        for(GrantedAuthority authority : authentication.getAuthorities()){
-            System.out.println(authority);
-        }
-
-        if(userObject == null){
-            throw new RuntimeException("O usuário com id " + id + " foi encontrado, mas algo deu errado. Ele veio como null.");
-        }
-
-        if(!userObject.getUserEmail().equals(authentication.getName()) || !authentication.getAuthorities().isEmpty()) {
-            if(authentication.getAuthorities().contains("ROLE_ADMIN")) {
-                throw new RuntimeException("Não tem permissão para realizar esta ação");
+        if(!updatedUser.getUserEmail().equals(authenticatedUser.getUserEmail())){
+            if(!authenticatedUser.getUserRole().equals(UserRole.ADMIN)) {
+                throw new AuthorizationException("Parece que você não tem permissão para realizar esta ação...");
             }
         }
 
-        userObject.setUserName(dtoBody.getUserName());
-        userObject.setUserEmail(dtoBody.getUserEmail());
-        userObject.setUserPassword(encoder.encode(dtoBody.getUserPassword()));
-        userObject.setUserRole(dtoBody.getUserRole());
+        updatedUser.setUserName(dtoBody.getUserName());
+        updatedUser.setUserEmail(dtoBody.getUserEmail());
+        updatedUser.setUserPassword(encoder.encode(dtoBody.getUserPassword()));
+        updatedUser.setUserRole(dtoBody.getUserRole());
 
-        repository.save(userObject);
+        repository.save(updatedUser);
 
-        return new UserDTO(userObject);
+        return new UserDTO(updatedUser);
+
     }
 
     public User findByEmail(String email) {

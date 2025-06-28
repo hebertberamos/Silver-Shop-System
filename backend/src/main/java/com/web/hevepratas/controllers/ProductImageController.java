@@ -14,6 +14,7 @@ public class ProductImageController {
     private final ProductImageService service;
 
     @GetMapping("{productId}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> allByProductId(@PathVariable Long productId) {
         return ResponseEntity.ok(service.allImagesByProductId(productId));
     }

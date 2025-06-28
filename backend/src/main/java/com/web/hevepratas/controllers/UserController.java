@@ -7,7 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -22,6 +21,7 @@ public class UserController {
     private final UserService service;
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> save(@RequestBody UserDTO body) {
         body = service.save(body);
 
@@ -58,10 +58,17 @@ public class UserController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<?> update(@PathVariable("id") Long id, @RequestBody UserDTO dtoBody, Authentication authentication) {
-        UserDetails loggedUser = (UserDetails) authentication.getPrincipal();
+    public ResponseEntity<String> update(@PathVariable("id") Long id, @RequestBody UserDTO dto, Authentication authentication) {
+        ResponseEntity<String> retResponseEntity = null;
+        dto = service.update(id, dto, authentication);
 
-        return ResponseEntity.ok(service.update(id, dtoBody, authentication));
+        if (dto != null) {
+            retResponseEntity = ResponseEntity.ok("Informações atualizadas com suceso!");
+        } else {
+            retResponseEntity = ResponseEntity.badRequest().body("Algo de errado aconteceu e não foi possível alterar as informações");
+        }
+
+        return retResponseEntity;
     }
 
 }
