@@ -7,7 +7,6 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
 import lombok.Data;
-import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
@@ -16,8 +15,6 @@ import java.util.List;
 
 @Entity
 @Data
-@Getter
-@Setter
 @Table(name = "tb_product")
 public class Product {
 
@@ -60,4 +57,8 @@ public class Product {
     @Setter(AccessLevel.NONE)
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductImage> images = new ArrayList<>();
+
+    @OneToMany(mappedBy = "product")
+    @Setter(AccessLevel.NONE)
+    private List<FavoriteProduct> favoriteProducts = new ArrayList<>();
 }

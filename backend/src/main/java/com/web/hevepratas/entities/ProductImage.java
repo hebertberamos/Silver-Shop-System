@@ -2,13 +2,9 @@ package com.web.hevepratas.entities;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 @Entity
 @Data
-@Getter
-@Setter
 @Table(name = "tb_product_image")
 public class ProductImage {
 

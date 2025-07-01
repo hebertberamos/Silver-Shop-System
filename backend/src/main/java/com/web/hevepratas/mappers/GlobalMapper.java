@@ -4,10 +4,7 @@ import com.web.hevepratas.dtos.AddressDTO;
 import com.web.hevepratas.dtos.ClientDTO;
 import com.web.hevepratas.dtos.ProductDTO;
 import com.web.hevepratas.dtos.UserDTO;
-import com.web.hevepratas.entities.Address;
-import com.web.hevepratas.entities.Client;
-import com.web.hevepratas.entities.Product;
-import com.web.hevepratas.entities.User;
+import com.web.hevepratas.entities.*;
 
 public class GlobalMapper {
 

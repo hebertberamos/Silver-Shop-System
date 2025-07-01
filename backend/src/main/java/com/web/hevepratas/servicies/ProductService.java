@@ -20,7 +20,6 @@ import java.util.Optional;
 public class ProductService {
 
     private final ProductRepository repository;
-
     private final ProductImageService imageService;
 
     public ProductDTO save(ProductDTO dtoBody, MultipartFile mainImage, List<MultipartFile> images) {
@@ -82,6 +81,10 @@ public class ProductService {
         repository.save(productObject);
 
         return new ProductDTO(productObject);
+    }
+
+    protected Product returnProductById(Long id) {
+        return repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado..."));
     }
 
 }
