@@ -22,12 +22,16 @@ public class UserService {
 
     private final UserRepository repository;
     private final PasswordEncoder encoder;
+    private final ShoppingCartService cartService;
  
     public UserDTO save(UserDTO userDTO) {
         User entity = GlobalMapper.mapToUser(userDTO);
         entity.setUserPassword(encoder.encode(entity.getUserPassword()));
 
-        return new UserDTO(repository.save(entity));
+        entity = repository.save(entity);
+        cartService.create(entity);
+
+        return new UserDTO(entity);
     }
 
     public Collection<UserDTO> allUsers() {

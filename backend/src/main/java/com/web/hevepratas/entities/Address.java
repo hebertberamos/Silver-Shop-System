@@ -29,7 +29,6 @@ public class Address {
     @Column(name = "address_complement")
     private String complement;
 
-    @NotBlank(message = "O número da residencia é obrigatório")
     @Column(name = "address_house_number")
     private int houseNumber;
 
