@@ -1,6 +1,7 @@
 package com.web.hevepratas.exceptions.configs;
 
 import com.web.hevepratas.exceptions.AuthorizationException;
+import com.web.hevepratas.exceptions.InternalServerException;
 import com.web.hevepratas.exceptions.ResourceNotFoundException;
 import com.web.hevepratas.exceptions.LoginNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -46,4 +47,13 @@ public class ResourceExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(err);
     }
 
+    @ExceptionHandler(InternalServerException.class)
+    public ResponseEntity<StandardError> unauthorized(InternalServerException ex, HttpServletRequest request) {
+        StandardError err = new StandardError();
+        err.setTimestamp(Instant.now());
+        err.setStatus(HttpStatus.BAD_REQUEST.value());
+        err.setError(ex.getMessage());
+        err.setPath(request.getRequestURI());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(err);
+    }
 }

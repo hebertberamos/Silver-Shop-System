@@ -3,10 +3,17 @@ package com.web.hevepratas.servicies;
 import com.web.hevepratas.dtos.ProductDTO;
 import com.web.hevepratas.entities.Product;
 import com.web.hevepratas.entities.ProductImage;
+import com.web.hevepratas.entities.User;
+import com.web.hevepratas.enums.UserRole;
+import com.web.hevepratas.exceptions.AuthorizationException;
+import com.web.hevepratas.exceptions.InternalServerException;
 import com.web.hevepratas.exceptions.ResourceNotFoundException;
 import com.web.hevepratas.mappers.GlobalMapper;
 import com.web.hevepratas.repositories.ProductRepository;
+import com.web.hevepratas.servicies.configs.LogMessage;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,25 +24,39 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ProductService {
 
     private final ProductRepository repository;
     private final ProductImageService imageService;
 
-    public ProductDTO save(ProductDTO dtoBody, MultipartFile mainImage, List<MultipartFile> images) {
+    public ProductDTO save(ProductDTO dtoBody, MultipartFile mainImage, List<MultipartFile> images, Authentication auth) {
         Product productEntity = new Product();
-        productEntity = GlobalMapper.mapToProduct(dtoBody);
+        User authUser = (User) auth.getPrincipal();
 
-        List<ProductImage> productImages = imageService.saveImages(mainImage, images, productEntity);
-
-
-        if(!productImages.isEmpty()) {
-            for(ProductImage img : productImages) {
-                productEntity.getImages().add(img);
+        try {
+            if(!authUser.getUserRole().equals(UserRole.ADMIN)) {
+                notAuthorized(authUser, "Not authenticated user trying to save new product.");
             }
+
+//            productEntity = GlobalMapper.mapToProduct(dtoBody);
+
+            List<ProductImage> productImages = imageService.saveImages(mainImage, images, productEntity);
+
+
+            if (!productImages.isEmpty()) {
+                for (ProductImage img : productImages) {
+                    productEntity.getImages().add(img);
+                }
+            }
+
+            productEntity = repository.save(productEntity);
+        }
+        catch (Exception e) {
+            exceptionError(e, authUser, "Error to save a new product", "Não foi possível salvar o produto.");
         }
 
-        return new ProductDTO(repository.save(productEntity));
+        return new ProductDTO(productEntity);
     }
 
     public Collection<ProductDTO> allProducts() {
@@ -54,31 +75,49 @@ public class ProductService {
         return  new ProductDTO(optionalObject.orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado")));
     }
 
-    public String delete(Long id) {
-        Product productObject = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Producto com id " + id + " não encontrado"));
+    public String delete(Long id, Authentication auth) {
+        User authUser = (User) auth.getPrincipal();
 
-        repository.delete(productObject);
+        try {
+            if(!authUser.getUserRole().equals(UserRole.ADMIN)) {
+                notAuthorized(authUser, "Not authenticated user trying to delete a product.");
+            }
+
+            Product productObject = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Producto com id " + id + " não encontrado"));
+
+            repository.delete(productObject);
+        }
+        catch (Exception e) {
+            exceptionError(e, authUser, "Error to save a new product", "Não foi possível salvar o produto.");
+        }
 
         return "Produto deletado com sucesso!";
     }
 
-    public ProductDTO update(Long id, ProductDTO dtoBody) {
+    public ProductDTO update(Long id, ProductDTO dtoBody, Authentication auth) {
         Product productObject = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Producto com id " + id + " não encontrado"));
+        User authUser = (User) auth.getPrincipal();
 
-        if(productObject == null){
-            throw new RuntimeException("O usuário com id " + id + " foi encontrado, mas algo deu errado. Ele veio como null.");
+        try {
+            if (productObject == null) {
+
+                throw new InternalServerException("Não foi possível atualizar o produto.");
+            }
+
+            productObject.setProductName(dtoBody.getProductName());
+            productObject.setProductPrice(dtoBody.getProductPrice());
+            productObject.setProductGender(dtoBody.getProductGender());
+            productObject.setProductType(dtoBody.getProductType());
+            productObject.setProductSubType(dtoBody.getProductSubType());
+            productObject.setProductSize(dtoBody.getProductSize());
+            productObject.setProductDescription(dtoBody.getProductDescription());
+
+
+            repository.save(productObject);
         }
+        catch (Exception e) {
 
-        productObject.setProductName(dtoBody.getProductName());
-        productObject.setProductPrice(dtoBody.getProductPrice());
-        productObject.setProductGender(dtoBody.getProductGender());
-        productObject.setProductType(dtoBody.getProductType());
-        productObject.setProductSubType(dtoBody.getProductSubType());
-        productObject.setProductSize(dtoBody.getProductSize());
-        productObject.setProductDescription(dtoBody.getProductDescription());
-
-
-        repository.save(productObject);
+        }
 
         return new ProductDTO(productObject);
     }
@@ -87,4 +126,17 @@ public class ProductService {
         return repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado..."));
     }
 
+    private void notAuthorized(User authUser, String logMessage) {
+        LogMessage internalLog = new LogMessage(logMessage, authUser.getUserEmail(), getClass().toString(), null);
+        log.warn(internalLog.generateMessage());
+
+        throw new AuthorizationException("Você não tem autorização para prosseguir com esta requisição.");
+    }
+
+    private void exceptionError(Exception e, User authUser, String logMessage, String exceptionMessage) {
+        LogMessage internalLog = new LogMessage(logMessage, authUser.getUserEmail(), getClass().toString(), e);
+        log.error(internalLog.generateMessage());
+
+        throw new InternalServerException("Não foi possível salvar o produto.");
+    }
 }

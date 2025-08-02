@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -24,11 +25,11 @@ public class ProductController {
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> save(@RequestPart("body") ProductDTO body, @RequestPart("mainImage") MultipartFile mainImage, @RequestPart("images") List<MultipartFile> images) {
+    public ResponseEntity<?> save(@RequestPart("body") ProductDTO body, @RequestPart("mainImage") MultipartFile mainImage, @RequestPart("images") List<MultipartFile> images, Authentication auth) {
 
         ResponseEntity<String> returnResponse = null;
  
-        body = service.save(body, mainImage, images);
+        body = service.save(body, mainImage, images, auth);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -58,14 +59,14 @@ public class ProductController {
 
     @DeleteMapping("{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> delete(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(service.delete(id));
+    public ResponseEntity<?> delete(@PathVariable("id") Long id, Authentication auth) {
+        return ResponseEntity.ok(service.delete(id, auth));
     }
 
     @PutMapping("{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> update(@PathVariable("id") Long id, @RequestBody ProductDTO dtoBody) {
-        return ResponseEntity.ok(service.update(id, dtoBody));
+    public ResponseEntity<?> update(@PathVariable("id") Long id, @RequestBody ProductDTO dtoBody, Authentication auth) {
+        return ResponseEntity.ok(service.update(id, dtoBody, auth));
     }
 
 }
