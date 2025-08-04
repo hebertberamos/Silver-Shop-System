@@ -4,6 +4,7 @@ import com.web.hevepratas.servicies.ProductImageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -22,7 +23,7 @@ public class ProductImageController {
 
     @DeleteMapping("{imageId}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> delete(@PathVariable Long imageId) {
-        return ResponseEntity.ok(service.delete(imageId));
+    public ResponseEntity<?> delete(@PathVariable Long imageId, Authentication auth) {
+        return ResponseEntity.ok(service.delete(imageId, auth));
     }
 }

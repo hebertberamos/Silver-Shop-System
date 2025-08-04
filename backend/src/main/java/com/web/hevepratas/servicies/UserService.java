@@ -7,6 +7,7 @@ import com.web.hevepratas.exceptions.AuthorizationException;
 import com.web.hevepratas.exceptions.ResourceNotFoundException;
 import com.web.hevepratas.mappers.GlobalMapper;
 import com.web.hevepratas.repositories.UserRepository;
+import com.web.hevepratas.servicies.configs.Logger;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -59,25 +60,37 @@ public class UserService {
     }
 
     public UserDTO update(Long id, UserDTO dtoBody, Authentication authentication) {
-       User updatedUser = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Usuário com id " + id + " não encontrado"));
+        User updatedUser = null;
+        User authenticatedUser = null;
+        UserDTO userDto = null;
 
-        User authenticatedUser = (User) authentication.getPrincipal();
+        try {
+            updatedUser = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Usuário com id " + id + " não encontrado"));
+            authenticatedUser = (User) authentication.getPrincipal();
 
-        if(!updatedUser.getUserEmail().equals(authenticatedUser.getUserEmail())){
-            if(!authenticatedUser.getUserRole().equals(UserRole.ADMIN)) {
-                throw new AuthorizationException("Parece que você não tem permissão para realizar esta ação...");
+            if (!updatedUser.getUserEmail().equals(authenticatedUser.getUserEmail())) {
+                if (!authenticatedUser.getUserRole().equals(UserRole.ADMIN)) {
+                    throw new AuthorizationException("Parece que você não tem permissão para realizar esta ação...");
+                }
             }
+
+            updatedUser.setUserName(dtoBody.getUserName());
+            updatedUser.setUserEmail(dtoBody.getUserEmail());
+            updatedUser.setUserPassword(encoder.encode(dtoBody.getUserPassword()));
+            updatedUser.setUserRole(dtoBody.getUserRole());
+
+            updatedUser = repository.save(updatedUser);
+
+        } catch(Exception e) {
+            Logger.logExceptionError(e, authenticatedUser.getUserEmail(), "ERROR when user tries to update an other user information.", getClass().toString(), "Não foi possível executar a ação.");
         }
 
-        updatedUser.setUserName(dtoBody.getUserName());
-        updatedUser.setUserEmail(dtoBody.getUserEmail());
-        updatedUser.setUserPassword(encoder.encode(dtoBody.getUserPassword()));
-        updatedUser.setUserRole(dtoBody.getUserRole());
 
-        repository.save(updatedUser);
+        if(updatedUser != null) {
+            userDto = new UserDTO(updatedUser);
+        }
 
-        return new UserDTO(updatedUser);
-
+        return userDto;
     }
 
     public User findByEmail(String email) {

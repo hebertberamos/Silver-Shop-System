@@ -8,6 +8,7 @@ import com.web.hevepratas.exceptions.AuthorizationException;
 import com.web.hevepratas.exceptions.ResourceNotFoundException;
 import com.web.hevepratas.mappers.GlobalMapper;
 import com.web.hevepratas.repositories.AddressRepository;
+import com.web.hevepratas.servicies.configs.Logger;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -25,28 +26,36 @@ public class AddressService {
 
 
     public String update(Long userId, AddressDTO dtoBody, Authentication authentication) {
+
         String retResponse = null;
-        User authenticatedUser = (User) authentication.getPrincipal();
-        Address addressObject = catchAddressByUserId(userId);
-        User addressUser = GlobalMapper.mapToUser(userService.findById(userId));
-
-        if(!addressUser.getUserEmail().equals(authenticatedUser.getUserEmail())){
-            if(!authenticatedUser.getUserRole().equals(UserRole.ADMIN)){
-                throw new AuthorizationException("Parece que você não tem permissão para realizar esta ação...");
-            }
-        }
-
-        addressObject.setCity(dtoBody.getCity());
-        addressObject.setStreet(dtoBody.getStreet());
-        addressObject.setCep(dtoBody.getCep());
-        addressObject.setComplement(dtoBody.getComplement());
-        addressObject.setHouseNumber(dtoBody.getHouseNumber());
+        User authenticatedUser = null;
+        Address addressObject = null;
+        User addressUser = null;
 
         try {
+            authenticatedUser = (User) authentication.getPrincipal();
+            addressObject = catchAddressByUserId(userId);
+            addressUser = GlobalMapper.mapToUser(userService.findById(userId));
+
+
+            if(!addressUser.getUserEmail().equals(authenticatedUser.getUserEmail())){
+                if(!authenticatedUser.getUserRole().equals(UserRole.ADMIN)){
+                    throw new AuthorizationException("Parece que você não tem permissão para realizar esta ação...");
+                }
+            }
+
+            addressObject.setCity(dtoBody.getCity());
+            addressObject.setStreet(dtoBody.getStreet());
+            addressObject.setCep(dtoBody.getCep());
+            addressObject.setComplement(dtoBody.getComplement());
+            addressObject.setHouseNumber(dtoBody.getHouseNumber());
+
+
             repository.save(addressObject);
             retResponse = "Endereço atualizado com sucesso";
+
         } catch (Exception e) {
-            retResponse = "Não foi possível atualizar o endereço... " + e.getMessage();
+            Logger.logExceptionError(e, authenticatedUser.getUserEmail(), "ERROR when trying to update the user address", getClass().toString(), "Algo deu errado. Tente novamente mais tarde.");
         }
 
         return retResponse;
