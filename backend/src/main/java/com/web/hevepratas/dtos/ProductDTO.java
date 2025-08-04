@@ -1,108 +1,39 @@
 package com.web.hevepratas.dtos;
 
-import com.web.hevepratas.entities.enums.Gender;
-import com.web.hevepratas.entities.enums.ProductSubType;
-import com.web.hevepratas.entities.enums.ProductType;
+import com.web.hevepratas.entities.Product;
+import com.web.hevepratas.enums.ProductGender;
+import com.web.hevepratas.enums.ProductSubType;
+import com.web.hevepratas.enums.ProductType;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.math.BigDecimal;
 
+@Data
+@Getter
+@Setter
 public class ProductDTO {
 
     private Long id;
-    private String name;
-    private Double price;
-    private Gender gender;
-    private ProductType type;
-    private ProductSubType subType;
-    private String description;
-    private Double size;
-    private Integer quantityAvailable;
-    private String mainImageUrl;
-    private List<ProductImageDTO> images = new ArrayList<>();
+    private String productName;
+    private BigDecimal productPrice;
+    private ProductGender productGender;
+    private ProductType productType;
+    private ProductSubType productSubType;
+    private BigDecimal productSize;
+    private String productDescription;
 
+    public ProductDTO(){}
 
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Double getPrice() {
-        return price;
-    }
-
-    public void setPrice(Double price) {
-        this.price = price;
-    }
-
-    public Gender getGender() {
-        return gender;
-    }
-
-    public void setGender(Gender gender) {
-        this.gender = gender;
-    }
-
-    public ProductType getType() {
-        return type;
-    }
-
-    public void setType(ProductType type) {
-        this.type = type;
-    }
-
-    public ProductSubType getSubType() {
-        return subType;
-    }
-
-    public void setSubType(ProductSubType subType) {
-        this.subType = subType;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Double getSize() {
-        return size;
-    }
-
-    public void setSize(Double size) {
-        this.size = size;
-    }
-
-    public Integer getQuantityAvailable() {
-        return quantityAvailable;
-    }
-
-    public void setQuantityAvailable(Integer quantityAvailable) {
-        this.quantityAvailable = quantityAvailable;
-    }
-
-    public String getMainImageUrl() {
-        return mainImageUrl;
-    }
-
-    public void setMainImageUrl(String mainImageUrl) {
-        this.mainImageUrl = mainImageUrl;
-    }
-    public List<ProductImageDTO> getImages() {
-        return images;
+    public ProductDTO(Product entity) {
+        this.id = entity.getId();
+        this.productName = entity.getProductName();
+        this.productPrice = entity.getProductPrice();
+        this.productGender = entity.getProductGender();
+        this.productType = entity.getProductType();
+        this.productSubType = entity.getProductSubType();
+        this.productSize = entity.getProductSize();
+        this.productDescription = entity.getProductDescription();
     }
 }

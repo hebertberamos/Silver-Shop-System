@@ -1,83 +1,34 @@
 package com.web.hevepratas.dtos;
 
-import com.web.hevepratas.entities.enums.UserRole;
-import jakarta.validation.constraints.Email;
+import com.web.hevepratas.entities.User;
+import com.web.hevepratas.enums.UserRole;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
+@Data
+@Getter
+@Setter
 public class UserDTO {
 
     private Long id;
-    private UserRole role;
     private String userName;
-    private String cpf;
-    @Email(message = "Invalid email. \nPlease paste a valid email.")
-    private String email;
-    private String password;
-    private Long shoppingCartId;
-    private Long addressId;
+    private String userEmail;
+    private String userPassword;
+    private UserRole userRole;
+    private AddressDTO address;
 
+    public UserDTO() {}
 
+    public UserDTO(User user) {
+        this.id = user.getId();
+        this.userName = user.getUserName();
+        this.userEmail = user.getUserEmail();
+        this.userPassword = user.getUserPassword();
+        this.userRole = user.getUserRole();
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public String getCpf() {
-        return cpf;
-    }
-
-    public void setCpf(String cpf) {
-        this.cpf = cpf;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public Long getShoppingCartId() {
-        return shoppingCartId;
-    }
-
-    public void setShoppingCartId(Long shoppingCartId) {
-        this.shoppingCartId = shoppingCartId;
-    }
-
-    public Long getAddressId() {
-        return addressId;
-    }
-
-    public void setAddressId(Long addressId) {
-        this.addressId = addressId;
-    }
-
-    public UserRole getRole() {
-        return role;
-    }
-
-    public void setRole(UserRole role) {
-        this.role = role;
+        if(user.getAddress() != null) {
+            this.address = new AddressDTO(user.getAddress());
+        }
     }
 }

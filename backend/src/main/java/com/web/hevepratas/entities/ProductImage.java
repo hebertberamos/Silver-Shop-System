@@ -1,54 +1,26 @@
 package com.web.hevepratas.entities;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 @Entity
-@Table(name = "tb_product_images")
+@Data
+@Table(name = "tb_product_image")
 public class ProductImage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false, name = "id")
+    @Column(name = "id", nullable = false)
     private Long id;
-    @Column(name = "image_url")
-    private String imageUrl;
-    @Column(name = "main_image")
+
+    @Column(name = "image_name", nullable = false)
+    private String imageName;
+
+    @Column(name = "main_image", nullable = false)
     private boolean mainImage;
-    @ManyToOne
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
-
-    public boolean isMainImage() {
-        return mainImage;
-    }
-
-    public void setMainImage(boolean mainImage) {
-        this.mainImage = mainImage;
-    }
-
-    public Product getProduct() {
-        return product;
-    }
-
-    public void setProduct(Product product) {
-        this.product = product;
-    }
 }

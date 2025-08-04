@@ -1,15 +1,16 @@
 package com.web.hevepratas.controllers;
 
-import com.web.hevepratas.services.ShoppingCartService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.web.hevepratas.servicies.ShoppingCartService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/shoppingCart")
+@RequestMapping("shoppingCart")
+@RequiredArgsConstructor
 public class ShoppingCartController {
 
-    @Autowired
-    private ShoppingCartService service;
+    private final ShoppingCartService service;
+
 
 }

@@ -1,64 +1,34 @@
 package com.web.hevepratas.dtos;
 
-import com.web.hevepratas.entities.User;
+import com.web.hevepratas.entities.Address;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
+@Data
+@Getter
+@Setter
 public class AddressDTO {
 
+    private Long id;
     private String city;
-    private String address;
+    private String street;
     private String cep;
     private String complement;
     private int houseNumber;
-    private Long userId;
+//    private User user;
 
 
+    public AddressDTO () {}
 
-
-    public String getCity() {
-        return city;
+    public AddressDTO (Address entity)  {
+        this.id = entity.getId();
+        this.city = entity.getCity();
+        this.street = entity.getStreet();
+        this.cep = entity.getCep();
+        this.complement = entity.getComplement();
+        this.houseNumber = entity.getHouseNumber();
+//        this.user = entity.getUser();
     }
 
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getCep() {
-        return cep;
-    }
-
-    public void setCep(String cep) {
-        this.cep = cep;
-    }
-
-    public String getComplement() {
-        return complement;
-    }
-
-    public void setComplement(String complement) {
-        this.complement = complement;
-    }
-
-    public int getHouseNumber() {
-        return houseNumber;
-    }
-
-    public void setHouseNumber(int houseNumber) {
-        this.houseNumber = houseNumber;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
 }

@@ -1,73 +1,74 @@
 package com.web.hevepratas.controllers;
 
-import com.web.hevepratas.dtos.AddressDTO;
 import com.web.hevepratas.dtos.UserDTO;
-import com.web.hevepratas.services.AuthenticationService;
-import com.web.hevepratas.services.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import com.web.hevepratas.servicies.UserService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.net.URI;
+import java.util.Collection;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("users")
+@RequiredArgsConstructor
 public class UserController {
 
-    @Autowired
-    private UserService service;
-    @Autowired
-    private AuthenticationService authenticationService;
+    private final UserService service;
 
-    //just to test
-    @GetMapping(value = "/personal-profile")
-    public ResponseEntity<UserDTO> authenticatedUser(){
-        try {
-            UserDTO currentUser = authenticationService.authenticatedUser();
+    @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> save(@RequestBody UserDTO body) {
+        body = service.save(body);
 
-            authenticationService.validateSelfOrAdmin(currentUser.getEmail());
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(body.getId())
+                .toUri();
 
-            return ResponseEntity.ok(currentUser);
-        }
-        catch(Exception e){
-            return ResponseEntity.badRequest().build();
-        }
-    }
-
-    @GetMapping(value = "/get/{email}")
-    public ResponseEntity<UserDTO> getUserByEmail(@PathVariable String email){
-        UserDTO dto = service.getUserByEmail(email);
-        if(dto == null){
-            return ResponseEntity.badRequest().build();
+        if(body != null) {
+            return ResponseEntity.created(location).build();
         }
 
-        return ResponseEntity.ok(dto);
+        return new ResponseEntity("Não foi possível salvar o usuário. Verifique as informações e tente novamente.", HttpStatus.BAD_REQUEST);
     }
 
-    @GetMapping(value = "/all")
-    public ResponseEntity<Page<UserDTO>> findAllUser(Pageable pageable){
-        return service.findAll(pageable);
+    @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Collection<UserDTO>> all(){
+        Collection<UserDTO> collection = service.allUsers();
+        return ResponseEntity.ok(collection);
     }
 
-    @PostMapping(value = "/new")
-    public ResponseEntity<String> addNewUser(@RequestBody UserDTO dto){
-        return ResponseEntity.ok(service.addNewUser(dto));
+    @GetMapping("{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> findById(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(service.findById(id));
     }
 
-    @DeleteMapping(value = "/delete/{id}")
-    public ResponseEntity<String> deleteUser(@PathVariable Long id){
-        return service.deleteUser(id);
+    @DeleteMapping("{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> delete(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(service.delete(id));
     }
 
-    //This guy will be implemented using the jwt to get the user, so the {userId} will not be passed because the application will know the user by the token.
-    @PostMapping(value = "/add/address")
-    public ResponseEntity<String> addNewAddress(@RequestBody AddressDTO dto) throws Exception {
-        return service.addNewAddress(dto);
-    }
+    @PutMapping("{id}")
+    public ResponseEntity<String> update(@PathVariable("id") Long id, @RequestBody UserDTO dto, Authentication authentication) {
+        ResponseEntity<String> retResponseEntity = null;
+        dto = service.update(id, dto, authentication);
 
-    @GetMapping(value = "/test")
-    public String ping(){
-        return "pong";
+        if (dto != null) {
+            retResponseEntity = ResponseEntity.ok("Informações atualizadas com suceso!");
+        } else {
+            retResponseEntity = ResponseEntity.badRequest().body("Algo de errado aconteceu e não foi possível alterar as informações");
+        }
+
+        return retResponseEntity;
     }
 
 }

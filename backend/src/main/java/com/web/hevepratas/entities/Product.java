@@ -1,127 +1,64 @@
 package com.web.hevepratas.entities;
 
-import com.web.hevepratas.entities.enums.Gender;
-import com.web.hevepratas.entities.enums.ProductSubType;
-import com.web.hevepratas.entities.enums.ProductType;
+import com.web.hevepratas.enums.ProductGender;
+import com.web.hevepratas.enums.ProductSubType;
+import com.web.hevepratas.enums.ProductType;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "product")
+@Data
+@Table(name = "tb_product")
 public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false, name = "id")
+    @Column(name = "id", nullable = false, unique = true)
     private Long id;
-   @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ProductImage> images;
+
+    @NotBlank(message = "O nome do produto é obrigatório")
     @Column(name = "product_name")
-    private String name;
-    @Column(name = "product_price")
-    private Double price;
+    private String productName;
+
+    @NotBlank(message = "O preço do produto é obrigatório")
+    @Column(name = "product_price" , precision = 6, scale = 2)
+    private BigDecimal productPrice;
+
+    @Enumerated(EnumType.STRING)
+    @NotBlank(message = "É obrigatório definir o genero do produto")
     @Column(name = "product_gender")
+    private ProductGender productGender;
+
     @Enumerated(EnumType.STRING)
-    private Gender gender;
+    @NotBlank(message = "É obrigatório definir o tipo do produto")
     @Column(name = "product_type")
+    private ProductType productType;
+
     @Enumerated(EnumType.STRING)
-    private ProductType type;
+    @NotBlank(message = "É obrigatório definir o sub-tipo do produto")
     @Column(name = "product_subtype")
-    @Enumerated(EnumType.STRING)
-    private ProductSubType subType;
-    @Column(name = "product_description")
-    private String description;
+    private ProductSubType productSubType;
+
+    @NotBlank(message = "É obrigatório definir o tamanho do produto")
     @Column(name = "product_size")
-    private Double size;
-    @Column(name = "product_quantity")
-    private Integer quantityAvailable;
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-    private List<CartItem> cartItems;
+    private BigDecimal productSize;
 
+    @NotBlank(message = "Descrição obrigatória")
+    @Column(name = "product_description")
+    private String productDescription;
 
-    public Product() {
-        this.images = new ArrayList<>();
-    }
+    @Setter(AccessLevel.NONE)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProductImage> images = new ArrayList<>();
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public List<ProductImage> getImages() {
-        return images;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Double getPrice() {
-        return price;
-    }
-
-    public void setPrice(Double price) {
-        this.price = price;
-    }
-
-    public Gender getGender() {
-        return gender;
-    }
-
-    public void setGender(Gender gender) {
-        this.gender = gender;
-    }
-
-    public ProductType getType() {
-        return type;
-    }
-
-    public void setType(ProductType type) {
-        this.type = type;
-    }
-
-    public ProductSubType getSubType() {
-        return subType;
-    }
-
-    public void setSubType(ProductSubType subType) {
-        this.subType = subType;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Double getSize() {
-        return size;
-    }
-
-    public void setSize(Double size) {
-        this.size = size;
-    }
-
-    public Integer getQuantityAvailable() {
-        return quantityAvailable;
-    }
-
-    public void setQuantityAvailable(Integer quantityAvailable) {
-        this.quantityAvailable = quantityAvailable;
-    }
-
-    public List<CartItem> getCartItems() {
-        return cartItems;
-    }
+    @OneToMany(mappedBy = "product")
+    @Setter(AccessLevel.NONE)
+    private List<FavoriteProduct> favoriteProducts = new ArrayList<>();
 }

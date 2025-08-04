@@ -1,82 +1,38 @@
 package com.web.hevepratas.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import lombok.Data;
 
 @Entity
+@Data
 @Table(name = "tb_address")
 public class Address {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false, name = "id")
+    @Column(name = "id", nullable = false, unique = true)
     private Long id;
-    @Column(name = "user_city")
+
+    @NotBlank(message = "O nome da cidade é obrigatório")
+    @Column(name = "address_city")
     private String city;
-    @Column(name = "user_address")
-    private String address;
-    @Column(name = "user_cep")
+
+    @NotBlank(message = "O nome da rua é obrigatório")
+    @Column(name = "address_street")
+    private String street;
+
+    @NotBlank(message = "O cep é obrigatório")
+    @Column(name = "address_cep")
     private String cep;
-    @Column(name = "user_address_complement")
+
+    @Column(name = "address_complement")
     private String complement;
-    @Column(name = "user_house_number")
+
+    @Column(name = "address_house_number")
     private int houseNumber;
-    @OneToOne
-    @JoinColumn(name = "user_id", nullable = false)
+
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id", nullable = false, unique = true)
     private User user;
-
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getCep() {
-        return cep;
-    }
-
-    public void setCep(String cep) {
-        this.cep = cep;
-    }
-
-    public String getComplement() {
-        return complement;
-    }
-
-    public void setComplement(String complement) {
-        this.complement = complement;
-    }
-
-    public int getHouseNumber() {
-        return houseNumber;
-    }
-
-    public void setHouseNumber(int houseNumber) {
-        this.houseNumber = houseNumber;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
 }

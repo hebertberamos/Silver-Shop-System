@@ -1,37 +1,22 @@
 package com.web.hevepratas.dtos;
 
+import com.web.hevepratas.entities.ProductImage;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
+@Data
 @Getter
 @Setter
 public class ProductImageDTO {
+
     private Long id;
-    private String imageUrl;
+    private String imageName;
     private boolean mainImage;
 
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
-
-    public boolean isMainImage() {
-        return mainImage;
-    }
-
-    public void setMainImage(boolean mainImage) {
-        this.mainImage = mainImage;
+    public ProductImageDTO (ProductImage image) {
+        this.id = image.getId();
+        this.imageName = image.getImageName();
+        this.mainImage = image.isMainImage();
     }
 }
