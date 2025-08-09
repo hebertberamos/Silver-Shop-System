@@ -8,7 +8,7 @@ import com.web.hevepratas.exceptions.AuthorizationException;
 import com.web.hevepratas.exceptions.ResourceNotFoundException;
 import com.web.hevepratas.mappers.GlobalMapper;
 import com.web.hevepratas.repositories.AddressRepository;
-import com.web.hevepratas.servicies.configs.Logger;
+import com.web.hevepratas.util.LogUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -55,7 +55,7 @@ public class AddressService {
             retResponse = "Endereço atualizado com sucesso";
 
         } catch (Exception e) {
-            Logger.logExceptionError(e, authenticatedUser.getUserEmail(), "ERROR when trying to update the user address", getClass().toString(), "Algo deu errado. Tente novamente mais tarde.");
+            LogUtil.logExceptionError(e, authenticatedUser.getUserEmail(), "ERROR when trying to update the user address", getClass().toString(), "Algo deu errado. Tente novamente mais tarde.");
         }
 
         return retResponse;

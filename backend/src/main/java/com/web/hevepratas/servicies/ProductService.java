@@ -8,7 +8,7 @@ import com.web.hevepratas.enums.UserRole;
 import com.web.hevepratas.exceptions.InternalServerException;
 import com.web.hevepratas.exceptions.ResourceNotFoundException;
 import com.web.hevepratas.repositories.ProductRepository;
-import com.web.hevepratas.servicies.configs.Logger;
+import com.web.hevepratas.util.LogUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -34,7 +34,7 @@ public class ProductService {
 
         try {
             if(!authUser.getUserRole().equals(UserRole.ADMIN)) {
-                Logger.logNotAuthorized(authUser.getUserEmail(), "Not authenticated user trying to save new product.", getClass().toString());
+                LogUtil.logNotAuthorized(authUser.getUserEmail(), "Not authenticated user trying to save new product.", getClass().toString());
             }
 
             //TODO: Uncomment this line
@@ -52,7 +52,7 @@ public class ProductService {
             productEntity = repository.save(productEntity);
         }
         catch (Exception e) {
-            Logger.logExceptionError(e, authUser.getUserEmail(), "Error to save a new product", getClass().toString(), "Não foi possível salvar o produto.");
+            LogUtil.logExceptionError(e, authUser.getUserEmail(), "Error to save a new product", getClass().toString(), "Não foi possível salvar o produto.");
         }
 
         return new ProductDTO(productEntity);
@@ -79,7 +79,7 @@ public class ProductService {
 
         try {
             if(!authUser.getUserRole().equals(UserRole.ADMIN)) {
-                Logger.logNotAuthorized(authUser.getUserEmail(), "Not authenticated user trying to delete a product.", getClass().toString());
+                LogUtil.logNotAuthorized(authUser.getUserEmail(), "Not authenticated user trying to delete a product.", getClass().toString());
             }
 
             Product productObject = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Producto com id " + id + " não encontrado"));
@@ -87,7 +87,7 @@ public class ProductService {
             repository.delete(productObject);
         }
         catch (Exception e) {
-            Logger.logExceptionError(e, authUser.getUserEmail(), "Error to save a new product", getClass().toString(), "Não foi possível salvar o produto.");
+            LogUtil.logExceptionError(e, authUser.getUserEmail(), "Error to save a new product", getClass().toString(), "Não foi possível salvar o produto.");
         }
 
         return "Produto deletado com sucesso!";
