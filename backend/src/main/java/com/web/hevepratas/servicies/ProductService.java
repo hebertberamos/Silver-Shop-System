@@ -7,6 +7,7 @@ import com.web.hevepratas.entities.User;
 import com.web.hevepratas.enums.UserRole;
 import com.web.hevepratas.exceptions.InternalServerException;
 import com.web.hevepratas.exceptions.ResourceNotFoundException;
+import com.web.hevepratas.mappers.GlobalMapper;
 import com.web.hevepratas.repositories.ProductRepository;
 import com.web.hevepratas.util.LogUtil;
 import lombok.RequiredArgsConstructor;
@@ -37,8 +38,7 @@ public class ProductService {
                 LogUtil.logNotAuthorized(authUser.getUserEmail(), "Not authenticated user trying to save new product.", getClass().toString());
             }
 
-            //TODO: Uncomment this line
-//            productEntity = GlobalMapper.mapToProduct(dtoBody);
+            productEntity = GlobalMapper.mapToProduct(dtoBody);
 
             List<ProductImage> productImages = imageService.saveImages(mainImage, images, productEntity, authUser);
 
