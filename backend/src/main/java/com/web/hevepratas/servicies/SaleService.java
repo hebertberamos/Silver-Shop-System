@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,6 +45,7 @@ public class SaleService {
 
             sale.setCustomer(customer);
             sale.setItems(saleItems);
+            sale.setSaleDateTime(LocalDateTime.now());
             sale.totalAmount(saleItems);
 
             //TODO: include the process to do the sale before save the sale object to the database
