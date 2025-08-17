@@ -3,6 +3,7 @@ package com.web.hevepratas.servicies;
 import com.web.hevepratas.dtos.ProductDTO;
 import com.web.hevepratas.entities.Product;
 import com.web.hevepratas.entities.ProductImage;
+import com.web.hevepratas.entities.SaleItem;
 import com.web.hevepratas.entities.User;
 import com.web.hevepratas.enums.UserRole;
 import com.web.hevepratas.exceptions.InternalServerException;
@@ -99,7 +100,6 @@ public class ProductService {
 
         try {
             if (productObject == null) {
-
                 throw new InternalServerException("Não foi possível atualizar o produto.");
             }
 
@@ -123,5 +123,27 @@ public class ProductService {
 
     protected Product returnProductById(Long id) {
         return repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado..."));
+    }
+
+    public void decreaseProductQuantity(List<SaleItem> items, User user) {
+        try {
+            for (SaleItem item : items) {
+                Product product = returnProductById(item.getProduct().getId());
+                int itemQuantity = item.getQuantity();
+
+                if (itemQuantity > product.getStockQuantity()) {
+                    throw new InternalServerException("Não foi possível realizar a ação...");
+                }
+
+                int newProductStockQuantity = product.getStockQuantity() - itemQuantity;
+
+                product.setStockQuantity(newProductStockQuantity);
+
+                repository.save(product);
+            }
+        } catch (InternalServerException e) {
+            LogUtil.logExceptionError(e, user.getUserEmail(), "Por alguma razão o usuário conseguiu adicionar na compra mais produtos do que existe no estoque", getClass().toString(), e.getMessage());
+            throw new InternalServerException(e.getMessage());
+        }
     }
 }

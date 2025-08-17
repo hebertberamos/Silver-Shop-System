@@ -1,10 +1,8 @@
 package com.web.hevepratas.mappers;
 
-import com.web.hevepratas.dtos.AddressDTO;
-import com.web.hevepratas.dtos.ClientDTO;
-import com.web.hevepratas.dtos.ProductDTO;
-import com.web.hevepratas.dtos.UserDTO;
+import com.web.hevepratas.dtos.*;
 import com.web.hevepratas.entities.*;
+import com.web.hevepratas.servicies.ProductService;
 
 public class GlobalMapper {
 
@@ -27,6 +25,7 @@ public class GlobalMapper {
 
         returnProduct.setProductName(dto.getProductName());
         returnProduct.setProductPrice(dto.getProductPrice());
+        returnProduct.setStockQuantity(dto.getStockQuantity());
         returnProduct.setProductGender(dto.getProductGender());
         returnProduct.setProductType(dto.getProductType());
         returnProduct.setProductSubType(dto.getProductSubType());
@@ -59,4 +58,16 @@ public class GlobalMapper {
 
         return returnClient;
     }
+
+    public static Sale mapToSale (SaleDTO dto) {
+        Sale returnEntity = new Sale();
+
+        returnEntity.setId(dto.getId());
+        returnEntity.setCustomer(dto.getCustomer());
+        returnEntity.setItems(dto.getItems());
+        returnEntity.setSaleAmount(dto.getSaleAmount());
+
+        return returnEntity;
+    }
+
 }
