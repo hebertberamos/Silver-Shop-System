@@ -18,6 +18,7 @@ public class ProductDTO {
     private Long id;
     private String productName;
     private BigDecimal productPrice;
+    private int stockQuantity;
     private ProductGender productGender;
     private ProductType productType;
     private ProductSubType productSubType;
@@ -30,6 +31,7 @@ public class ProductDTO {
         this.id = entity.getId();
         this.productName = entity.getProductName();
         this.productPrice = entity.getProductPrice();
+        this.stockQuantity = entity.getStockQuantity();
         this.productGender = entity.getProductGender();
         this.productType = entity.getProductType();
         this.productSubType = entity.getProductSubType();

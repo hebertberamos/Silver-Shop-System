@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.math.BigDecimal;
 import java.net.URI;
 import java.util.Collection;
 import java.util.List;
@@ -28,7 +29,12 @@ public class ProductController {
     public ResponseEntity<?> save(@RequestPart("body") ProductDTO body, @RequestPart("mainImage") MultipartFile mainImage, @RequestPart("images") List<MultipartFile> images, Authentication auth) {
 
         ResponseEntity<String> returnResponse = null;
- 
+
+        //TEST
+            BigDecimal priceValue = body.getProductPrice();
+            String price = priceValue.toString();
+        // TEST END HERE
+
         body = service.save(body, mainImage, images, auth);
 
         URI location = ServletUriComponentsBuilder

@@ -7,7 +7,7 @@ import com.web.hevepratas.exceptions.AuthorizationException;
 import com.web.hevepratas.exceptions.ResourceNotFoundException;
 import com.web.hevepratas.mappers.GlobalMapper;
 import com.web.hevepratas.repositories.UserRepository;
-import com.web.hevepratas.servicies.configs.Logger;
+import com.web.hevepratas.util.LogUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -82,7 +82,7 @@ public class UserService {
             updatedUser = repository.save(updatedUser);
 
         } catch(Exception e) {
-            Logger.logExceptionError(e, authenticatedUser.getUserEmail(), "ERROR when user tries to update an other user information.", getClass().toString(), "Não foi possível executar a ação.");
+            LogUtil.logExceptionError(e, authenticatedUser.getUserEmail(), "ERROR when user tries to update an other user information.", getClass().toString(), "Não foi possível executar a ação.");
         }
 
 

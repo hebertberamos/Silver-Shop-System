@@ -3,12 +3,14 @@ package com.web.hevepratas.servicies;
 import com.web.hevepratas.dtos.ProductDTO;
 import com.web.hevepratas.entities.Product;
 import com.web.hevepratas.entities.ProductImage;
+import com.web.hevepratas.entities.SaleItem;
 import com.web.hevepratas.entities.User;
 import com.web.hevepratas.enums.UserRole;
 import com.web.hevepratas.exceptions.InternalServerException;
 import com.web.hevepratas.exceptions.ResourceNotFoundException;
+import com.web.hevepratas.mappers.GlobalMapper;
 import com.web.hevepratas.repositories.ProductRepository;
-import com.web.hevepratas.servicies.configs.Logger;
+import com.web.hevepratas.util.LogUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -34,11 +36,10 @@ public class ProductService {
 
         try {
             if(!authUser.getUserRole().equals(UserRole.ADMIN)) {
-                Logger.logNotAuthorized(authUser.getUserEmail(), "Not authenticated user trying to save new product.", getClass().toString());
+                LogUtil.logNotAuthorized(authUser.getUserEmail(), "Not authenticated user trying to save new product.", getClass().toString());
             }
 
-            //TODO: Uncomment this line
-//            productEntity = GlobalMapper.mapToProduct(dtoBody);
+            productEntity = GlobalMapper.mapToProduct(dtoBody);
 
             List<ProductImage> productImages = imageService.saveImages(mainImage, images, productEntity, authUser);
 
@@ -52,7 +53,7 @@ public class ProductService {
             productEntity = repository.save(productEntity);
         }
         catch (Exception e) {
-            Logger.logExceptionError(e, authUser.getUserEmail(), "Error to save a new product", getClass().toString(), "Não foi possível salvar o produto.");
+            LogUtil.logExceptionError(e, authUser.getUserEmail(), "Error to save a new product", getClass().toString(), "Não foi possível salvar o produto.");
         }
 
         return new ProductDTO(productEntity);
@@ -79,7 +80,7 @@ public class ProductService {
 
         try {
             if(!authUser.getUserRole().equals(UserRole.ADMIN)) {
-                Logger.logNotAuthorized(authUser.getUserEmail(), "Not authenticated user trying to delete a product.", getClass().toString());
+                LogUtil.logNotAuthorized(authUser.getUserEmail(), "Not authenticated user trying to delete a product.", getClass().toString());
             }
 
             Product productObject = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Producto com id " + id + " não encontrado"));
@@ -87,7 +88,7 @@ public class ProductService {
             repository.delete(productObject);
         }
         catch (Exception e) {
-            Logger.logExceptionError(e, authUser.getUserEmail(), "Error to save a new product", getClass().toString(), "Não foi possível salvar o produto.");
+            LogUtil.logExceptionError(e, authUser.getUserEmail(), "Error to save a new product", getClass().toString(), "Não foi possível salvar o produto.");
         }
 
         return "Produto deletado com sucesso!";
@@ -99,7 +100,6 @@ public class ProductService {
 
         try {
             if (productObject == null) {
-
                 throw new InternalServerException("Não foi possível atualizar o produto.");
             }
 
@@ -123,5 +123,27 @@ public class ProductService {
 
     protected Product returnProductById(Long id) {
         return repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado..."));
+    }
+
+    public void decreaseProductQuantity(List<SaleItem> items, User user) {
+        try {
+            for (SaleItem item : items) {
+                Product product = returnProductById(item.getProduct().getId());
+                int itemQuantity = item.getQuantity();
+
+                if (itemQuantity > product.getStockQuantity()) {
+                    throw new InternalServerException("Não foi possível realizar a ação...");
+                }
+
+                int newProductStockQuantity = product.getStockQuantity() - itemQuantity;
+
+                product.setStockQuantity(newProductStockQuantity);
+
+                repository.save(product);
+            }
+        } catch (InternalServerException e) {
+            LogUtil.logExceptionError(e, user.getUserEmail(), "Por alguma razão o usuário conseguiu adicionar na compra mais produtos do que existe no estoque", getClass().toString(), e.getMessage());
+            throw new InternalServerException(e.getMessage());
+        }
     }
 }

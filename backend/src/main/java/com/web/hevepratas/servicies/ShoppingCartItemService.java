@@ -5,7 +5,7 @@ import com.web.hevepratas.entities.ShoppingCart;
 import com.web.hevepratas.entities.ShoppingCartItem;
 import com.web.hevepratas.entities.User;
 import com.web.hevepratas.repositories.ShoppingCartItemRepository;
-import com.web.hevepratas.servicies.configs.Logger;
+import com.web.hevepratas.util.LogUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -41,7 +41,7 @@ public class ShoppingCartItemService {
             retResponse = "Adicionado ao carrinho com sucesso!";
         }
         catch(Exception e) {
-            Logger.logExceptionError(e, user.getUserEmail(), "ERROR when user tries to save a new product to cart.", getClass().toString(), "Não foi possível executar a ação.");
+            LogUtil.logExceptionError(e, user.getUserEmail(), "ERROR when user tries to save a new product to cart.", getClass().toString(), "Não foi possível executar a ação.");
         }
 
         return retResponse;
@@ -68,7 +68,7 @@ public class ShoppingCartItemService {
                 }
             }
         } catch(Exception e) {
-            Logger.logExceptionError(e, user.getUserEmail(), "ERROR when user tries to delete a new product to cart.", getClass().toString(), "Não foi possível executar a ação.");
+            LogUtil.logExceptionError(e, user.getUserEmail(), "ERROR when user tries to delete a new product to cart.", getClass().toString(), "Não foi possível executar a ação.");
         }
 
         return retResponse;

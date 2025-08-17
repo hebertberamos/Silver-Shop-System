@@ -6,7 +6,7 @@ import com.web.hevepratas.entities.ProductImage;
 import com.web.hevepratas.entities.User;
 import com.web.hevepratas.exceptions.ResourceNotFoundException;
 import com.web.hevepratas.repositories.ProductImageRepository;
-import com.web.hevepratas.servicies.configs.Logger;
+import com.web.hevepratas.util.LogUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -36,7 +36,7 @@ public class ProductImageService {
 
 
         if(mainImage.isEmpty()){
-            Logger.logMessage(user.getUserEmail(), "User trying to save a product without image.", getClass().toString());
+            LogUtil.logMessage(user.getUserEmail(), "User trying to save a product without image.", getClass().toString());
             throw new ResourceNotFoundException("Pelo menos uma imagem tem que ser passada como principal.");
         }
 
@@ -66,7 +66,7 @@ public class ProductImageService {
             repository.delete(image);
         }
         catch(Exception e) {
-            Logger.logExceptionError(e, authUser.getUserEmail(), "Error while trying to delete the product image " + imageId, getClass().toString(), "Não foi possível deletar esta imagem.");
+            LogUtil.logExceptionError(e, authUser.getUserEmail(), "Error while trying to delete the product image " + imageId, getClass().toString(), "Não foi possível deletar esta imagem.");
         }
 
         return "Imagem deletada com sucesso!";

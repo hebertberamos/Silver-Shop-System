@@ -6,7 +6,7 @@ import com.web.hevepratas.entities.Product;
 import com.web.hevepratas.entities.User;
 import com.web.hevepratas.exceptions.ResourceNotFoundException;
 import com.web.hevepratas.repositories.FavoriteProductRepository;
-import com.web.hevepratas.servicies.configs.Logger;
+import com.web.hevepratas.util.LogUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -44,7 +44,7 @@ public class FavoriteProductService {
                 }
             }
         } catch (Exception e) {
-            Logger.logExceptionError(e, user.getUserEmail(), "The user tried to favorite a product and didn't worked.", getClass().toString(), "Não foi possível favoritar o produto");
+            LogUtil.logExceptionError(e, user.getUserEmail(), "The user tried to favorite a product and didn't worked.", getClass().toString(), "Não foi possível favoritar o produto");
         }
 
         return response;
@@ -64,7 +64,7 @@ public class FavoriteProductService {
             }
 
         } catch(Exception e){
-            Logger.logExceptionError(e, user.getUserEmail(), "Something went wrong when the user tried to see your oun favorite products.", getClass().toString(), "Não foi possível realizar a ação... Tente novamente mais tarde.");
+            LogUtil.logExceptionError(e, user.getUserEmail(), "Something went wrong when the user tried to see your oun favorite products.", getClass().toString(), "Não foi possível realizar a ação... Tente novamente mais tarde.");
         }
 
         return favoriteProductsDto;
@@ -83,7 +83,7 @@ public class FavoriteProductService {
             response = "Desfavoritado!";
             
         } catch(Exception e){
-            Logger.logExceptionError(e, user.getUserEmail(), "ERROR when trying to unfavorite a product", getClass().toString(), "Não foi possível realizar a ação... Tente novamente mais tarde.");
+            LogUtil.logExceptionError(e, user.getUserEmail(), "ERROR when trying to unfavorite a product", getClass().toString(), "Não foi possível realizar a ação... Tente novamente mais tarde.");
         }
 
         return response;

@@ -1,4 +1,4 @@
-package com.web.hevepratas.servicies.configs;
+package com.web.hevepratas.util;
 
 import com.web.hevepratas.exceptions.AuthorizationException;
 import com.web.hevepratas.exceptions.InternalServerException;
@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public abstract class Logger {
+public class LogUtil  {
 
     public static void logNotAuthorized(String userEmail, String logMessage, String className) {
         log.warn(generateMessage(logMessage, userEmail, className, null));
