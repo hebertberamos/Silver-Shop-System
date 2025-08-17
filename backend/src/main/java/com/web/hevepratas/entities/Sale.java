@@ -43,7 +43,6 @@ public class Sale {
 
             calcAmount = itemPrice.multiply(quantity);
             totalAmount = totalAmount.add(calcAmount);
-            System.out.println("Total amount: " + totalAmount.toString());
         }
 
         this.saleAmount = totalAmount;
